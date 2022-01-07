@@ -62,10 +62,10 @@ export const Puzzle = () => {
 
     useEffect(() => {
         console.log('puzzle - init')
-        setData({
-            ...data,
+        setData((currentState) => ({
+            ...currentState,
             url: 'https://source.unsplash.com/640x480/?beach'
-        })
+        }))
         dispatch({ type: PUZZLE_STATES.LOADING})
     }, [dispatch])
 
@@ -86,8 +86,10 @@ export const Puzzle = () => {
         if(data.ordered) {
             setData({
                 ...data,
+                items: undefined,
                 url: 'https://source.unsplash.com/640x480/?beach'
             })
+            dispatch({ type: PUZZLE_STATES.LOADING})
         }
     }, [data.ordered])
 
