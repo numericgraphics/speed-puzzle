@@ -5,9 +5,9 @@ const ImageSliceComponent = (props, ref) => {
     const { reducer } = useContext(PuzzleContext)
     const { state } = reducer
 
-    useEffect(()=>{
-        console.log('ImageSliceComponent - state', state)
-    }, [state])
+    // useEffect(()=>{
+    //     console.log('ImageSliceComponent - state', state)
+    // }, [state])
 
     const getItemImage = (index) => ({
         width: 480,

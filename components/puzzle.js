@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState, useContext} from "react"
+import React, {Fragment, useEffect, useState, useContext, useRef, useCallback} from "react"
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
 import ImageSliceComponent from "./imageComponent"
 import {ArrayExtended} from '../utils/array'
@@ -6,6 +6,7 @@ import {useFetch} from "../hooks/useFetch"
 import Loading from './loading'
 import PuzzleContext from "../providers/puzzleProvider"
 import {PUZZLE_STATES} from "../reducers/puzzleReducer"
+import {COUNTER_MESSAGES} from "../utils/constants"
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -14,8 +15,9 @@ import {PUZZLE_STATES} from "../reducers/puzzleReducer"
 export const Puzzle = () => {
     const { reducer } = useContext(PuzzleContext)
     const { state, dispatch } = reducer
-    const [data, setData] = useState({items: undefined, ordered: undefined, url: ''})
+    const [data, setData] = useState({ items: undefined, ordered: undefined, url: '' })
     const [response, loading] = useFetch(data.url)
+    const workerRef = useRef()
     const checkPuzzleOrder = (array) => {
         const test = array.map((item) => {
             return item.index
@@ -33,14 +35,11 @@ export const Puzzle = () => {
             result.destination.index
         )
 
-        console.log("checkPuzzleOrder", checkPuzzleOrder(items))
-
         setData({
             ...data,
             items,
             ordered: checkPuzzleOrder(items)
         })
-
     }
     const getListStyle = (isDraggingOver) => ({
         background: isDraggingOver ? "green" : "red",
@@ -59,43 +58,77 @@ export const Puzzle = () => {
         userSelect: "none",
         ...draggableStyle
     })
+    const getRandomNumber = () => {
+        return (Math.floor(Math.random() * 10))
+    }
+    // const handleWorker = useCallback(async () => {
+    //     console.log('handleWorker called')
+    //     workerRef.current.postMessage({event: COUNTER_MESSAGES.START})
+    // }, [])
+
+    const updateWorker = () => {
+        if (typeof (Worker) !== "undefined") {
+            workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
+            workerRef.current.onmessage = (event) => {
+                if (event.data.event === COUNTER_MESSAGES.END) {
+                    console.log('END - timerValue', event.data.timerValue)
+                    dispatch({ type: PUZZLE_STATES.LOADING,  })
+                    workerRef.current.terminate()
+                }
+            }
+        } else {
+            console.log('TIMER WORKER ISSUE - browser doesnt support')
+        }
+
+    }
+
 
     useEffect(() => {
-        console.log('puzzle - init')
-        setData((currentState) => ({
-            ...currentState,
-            url: 'https://source.unsplash.com/640x480/?beach'
-        }))
-        dispatch({ type: PUZZLE_STATES.LOADING})
-    }, [dispatch])
+        console.log('state', state)
+        switch (state.event) {
+            case PUZZLE_STATES.INIT:
+                dispatch({ type: PUZZLE_STATES.LOADING })
+                break
+            case PUZZLE_STATES.LOADING:
+                setData({
+                    url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
+                    items: ArrayExtended.getRandomArray(getItems(4)),
+                    ordered: false,
+                })
+                updateWorker()
+                break
+            case PUZZLE_STATES.READY:
+                workerRef.current.postMessage({ event: COUNTER_MESSAGES.START })
+                break
+            case PUZZLE_STATES.DONE:
+                setData(currentState => ({
+                    ...currentState,
+                    items: undefined,
+                    url: ''
+                }))
+                workerRef.current.postMessage({ event: COUNTER_MESSAGES.END })
+                break
+
+        }
+
+
+    }, [state, dispatch])
 
     useEffect(() => {
         if (!loading) {
-            setData({
-                url: '',
-                items: ArrayExtended.getRandomArray(getItems(4)),
-                ordered: false,
-            })
             dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
-
         }
-    }, [response, loading, dispatch])
+    }, [loading, response, dispatch])
 
     useEffect(() => {
-            console.log('ordered ?', data.ordered)
-        if(data.ordered) {
-            setData({
-                ...data,
-                items: undefined,
-                url: 'https://source.unsplash.com/640x480/?beach'
-            })
-            dispatch({ type: PUZZLE_STATES.LOADING})
+        if (data.ordered) {
+            dispatch({ type: PUZZLE_STATES.DONE })
         }
-    }, [data.ordered])
+    }, [data.ordered, dispatch])
 
     return (
-            <Fragment>
-            {data.items !== undefined ?
+        <Fragment>
+            {state?.event === PUZZLE_STATES.READY ?
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(droppableProvided, droppableSnapshot) => (
@@ -125,7 +158,7 @@ export const Puzzle = () => {
                     </Droppable>
                 </DragDropContext>
                 : <Loading/>}
-            </Fragment>
+        </Fragment>
     )
 }
 

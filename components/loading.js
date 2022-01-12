@@ -5,9 +5,9 @@ const containerImage = {
 }
 
 const Loading = (props) => {
-    useEffect(()=>{
-        console.log('Loading - useEffect', props)
-    }, [])
+    // useEffect(()=>{
+    //     console.log('Loading - useEffect', props)
+    // }, [])
 
     return(
         <div className={styles.container}>

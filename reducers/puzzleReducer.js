@@ -2,25 +2,37 @@ export const PUZZLE_STATES = Object.freeze({
     INIT: 'init',
     READY: 'ready',
     LOADING: 'loading',
+    DONE: 'done',
     UPDATE: 'update'
 })
 
 export const InitialPuzzleState = {
-    imageUrl: ''
+    event: PUZZLE_STATES.INIT,
+    imageUrl: '',
+    timerValue: undefined
 }
 
 export const PuzzleReducer = (state, action) => {
-    console.log('PuzzleReducer state', state, ' action ', action)
     switch (action.type) {
         case PUZZLE_STATES.INIT :
-        case PUZZLE_STATES.LOADING :
         case PUZZLE_STATES.UPDATE :
+        case PUZZLE_STATES.DONE :
             return {
+                ...state,
+                event: action.type,
                 imageUrl: ''
             }
         case PUZZLE_STATES.READY :
             return {
-                imageUrl: action.imageUrl
+                event: action.type,
+                imageUrl: action.imageUrl,
+                timerValue: undefined
+            }
+        case PUZZLE_STATES.LOADING :
+            return {
+                event: action.type,
+                imageUrl: action.imageUrl,
+                timerValue: action.timerValue
             }
     }
 }
