@@ -61,30 +61,23 @@ export const Puzzle = () => {
     const getRandomNumber = () => {
         return (Math.floor(Math.random() * 10))
     }
-    // const handleWorker = useCallback(async () => {
-    //     console.log('handleWorker called')
-    //     workerRef.current.postMessage({event: COUNTER_MESSAGES.START})
-    // }, [])
-
-    const updateWorker = () => {
-        if (typeof (Worker) !== "undefined") {
-            workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
-            workerRef.current.onmessage = (event) => {
-                if (event.data.event === COUNTER_MESSAGES.END) {
-                    console.log('END - timerValue', event.data.timerValue)
-                    dispatch({ type: PUZZLE_STATES.LOADING,  })
-                    workerRef.current.terminate()
-                }
-            }
-        } else {
-            console.log('TIMER WORKER ISSUE - browser doesnt support')
-        }
-
-    }
-
 
     useEffect(() => {
-        console.log('state', state)
+        const updateWorker = () => {
+            if (typeof (Worker) !== "undefined") {
+                workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
+                workerRef.current.onmessage = (event) => {
+                    if (event.data.event === COUNTER_MESSAGES.END) {
+                        console.log('END - timerValue', event.data.timerValue)
+                        dispatch({ type: PUZZLE_STATES.LOADING,  })
+                        workerRef.current.terminate()
+                    }
+                }
+            } else {
+                console.log('TIMER WORKER ISSUE - browser doesnt support')
+            }
+        }
+
         switch (state.event) {
             case PUZZLE_STATES.INIT:
                 dispatch({ type: PUZZLE_STATES.LOADING })
@@ -108,10 +101,7 @@ export const Puzzle = () => {
                 }))
                 workerRef.current.postMessage({ event: COUNTER_MESSAGES.END })
                 break
-
         }
-
-
     }, [state, dispatch])
 
     useEffect(() => {
