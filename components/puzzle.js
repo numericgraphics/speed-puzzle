@@ -69,13 +69,17 @@ export const Puzzle = () => {
                 workerRef.current.onmessage = (event) => {
                     if (event.data.event === COUNTER_MESSAGES.END) {
                         console.log('END - timerValue', event.data.timerValue)
-                        dispatch({ type: PUZZLE_STATES.LOADING,  })
+                        dispatch({ type: PUZZLE_STATES.LOADING, timerValue: event.data.timerValue })
                         workerRef.current.terminate()
                     }
                 }
             } else {
                 console.log('TIMER WORKER ISSUE - browser doesnt support')
             }
+        }
+
+        const postTimerMessages = (event) => {
+            workerRef.current.postMessage({ event })
         }
 
         switch (state.event) {
@@ -91,7 +95,7 @@ export const Puzzle = () => {
                 updateWorker()
                 break
             case PUZZLE_STATES.READY:
-                workerRef.current.postMessage({ event: COUNTER_MESSAGES.START })
+                postTimerMessages(COUNTER_MESSAGES.START)
                 break
             case PUZZLE_STATES.DONE:
                 setData(currentState => ({
@@ -99,7 +103,7 @@ export const Puzzle = () => {
                     items: undefined,
                     url: ''
                 }))
-                workerRef.current.postMessage({ event: COUNTER_MESSAGES.END })
+                postTimerMessages(COUNTER_MESSAGES.END)
                 break
         }
     }, [state, dispatch])
