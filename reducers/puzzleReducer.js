@@ -2,6 +2,7 @@ export const PUZZLE_STATES = Object.freeze({
     INIT: 'init',
     READY: 'ready',
     LOADING: 'loading',
+    END_LOADING: 'endLoading',
     DONE: 'done',
     UPDATE: 'update'
 })

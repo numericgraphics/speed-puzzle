@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, forwardRef, memo, useContext} from 'react'
+import React, {useState, useEffect, useRef, forwardRef, useContext} from 'react'
 import PuzzleContext from "../providers/puzzleProvider"
 
 const ImageSliceComponent = (props, ref) => {
@@ -27,5 +27,5 @@ const ImageSliceComponent = (props, ref) => {
     )
 }
 
-export default memo(forwardRef(ImageSliceComponent))
+export default forwardRef(ImageSliceComponent)
 

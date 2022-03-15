@@ -7,6 +7,7 @@ import Loading from './loading'
 import PuzzleContext from "../providers/puzzleProvider"
 import {PUZZLE_STATES} from "../reducers/puzzleReducer"
 import {COUNTER_MESSAGES} from "../utils/constants"
+import {millisecondToMinutes} from "../utils/tools"
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -62,13 +63,21 @@ export const Puzzle = () => {
         return (Math.floor(Math.random() * 10))
     }
 
+    const recursiveRandomArray = async (items) => {
+        const randomArray = ArrayExtended.getRandomArray(items)
+        if(checkPuzzleOrder(randomArray)) {
+            return await recursiveRandomArray(items)
+        }
+        return randomArray
+    }
+
     useEffect(() => {
         const updateWorker = () => {
             if (typeof (Worker) !== "undefined") {
                 workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
                 workerRef.current.onmessage = (event) => {
                     if (event.data.event === COUNTER_MESSAGES.END) {
-                        console.log('END - timerValue', event.data.timerValue)
+                        console.log('END - timerValue', millisecondToMinutes(event.data.timerValue))
                         dispatch({ type: PUZZLE_STATES.LOADING, timerValue: event.data.timerValue })
                         workerRef.current.terminate()
                     }
@@ -82,17 +91,24 @@ export const Puzzle = () => {
             workerRef.current.postMessage({ event })
         }
 
+        const getPuzzleSource = async () => {
+            const items = await recursiveRandomArray(getItems(4))
+            setData({
+                url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
+                items,
+                ordered: false,
+            })
+            updateWorker()
+        }
+
         switch (state.event) {
             case PUZZLE_STATES.INIT:
                 dispatch({ type: PUZZLE_STATES.LOADING })
                 break
             case PUZZLE_STATES.LOADING:
-                setData({
-                    url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
-                    items: ArrayExtended.getRandomArray(getItems(4)),
-                    ordered: false,
-                })
-                updateWorker()
+                getPuzzleSource()
+                    .then(() => console.log('getPuzzleSource done !'))
+                    .catch((e) => console.log('getPuzzleSource - ERROR ', e))
                 break
             case PUZZLE_STATES.READY:
                 postTimerMessages(COUNTER_MESSAGES.START)
