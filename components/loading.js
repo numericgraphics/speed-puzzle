@@ -1,15 +1,12 @@
-import React, {useState, useEffect, useRef, forwardRef, memo} from 'react'
+import React, { memo } from 'react'
 import styles from './loading.module.css'
-const containerImage = {
-
-}
 
 const Loading = (props) => {
     // useEffect(()=>{
     //     console.log('Loading - useEffect', props)
     // }, [])
 
-    return(
+    return (
         <div className={styles.container}>
             <div className={styles.subContainer}>
                 <h1>Loading</h1>
@@ -19,4 +16,3 @@ const Loading = (props) => {
 }
 
 export default memo(Loading)
-

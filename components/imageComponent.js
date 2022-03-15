@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef, forwardRef, useContext} from 'react'
-import PuzzleContext from "../providers/puzzleProvider"
+import React, { forwardRef, useContext } from 'react'
+import PuzzleContext from '../providers/puzzleProvider'
 
 const ImageSliceComponent = (props, ref) => {
     const { reducer } = useContext(PuzzleContext)
@@ -17,15 +17,14 @@ const ImageSliceComponent = (props, ref) => {
         }px no-repeat`
     })
 
-    return(
-                <div
-                    ref={ref}
-                    {...props}
-                >
-                    <div style={getItemImage(props.index)} />
-                </div>
+    return (
+        <div
+            ref={ref}
+            {...props}
+        >
+            <div style={getItemImage(props.index)} />
+        </div>
     )
 }
 
 export default forwardRef(ImageSliceComponent)
-
