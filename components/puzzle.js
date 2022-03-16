@@ -1,13 +1,13 @@
-import React, {Fragment, useEffect, useState, useContext, useRef, useCallback} from "react"
-import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd"
-import ImageSliceComponent from "./imageComponent"
-import {ArrayExtended} from '../utils/array'
-import {useFetch} from "../hooks/useFetch"
+import React, { Fragment, useEffect, useState, useContext, useRef } from 'react'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import ImageSliceComponent from './imageComponent'
+import { ArrayExtended } from '../utils/array'
+import { useFetch } from '../hooks/useFetch'
 import Loading from './loading'
-import PuzzleContext from "../providers/puzzleProvider"
-import {PUZZLE_STATES} from "../reducers/puzzleReducer"
-import {COUNTER_MESSAGES} from "../utils/constants"
-import {millisecondToMinutes} from "../utils/tools"
+import PuzzleContext from '../providers/puzzleProvider'
+import { PUZZLE_STATES } from '../reducers/puzzleReducer'
+import { COUNTER_MESSAGES } from '../utils/constants'
+import { millisecondToMinutes } from '../utils/tools'
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -43,7 +43,7 @@ export const Puzzle = () => {
         })
     }
     const getListStyle = (isDraggingOver) => ({
-        background: isDraggingOver ? "green" : "red",
+        background: isDraggingOver ? 'green' : 'red',
         margin: 8,
         width: 480
     })
@@ -56,7 +56,7 @@ export const Puzzle = () => {
             }
         ))
     const getItemStyle = (isDragging, draggableStyle) => ({
-        userSelect: "none",
+        userSelect: 'none',
         ...draggableStyle
     })
     const getRandomNumber = () => {
@@ -65,7 +65,7 @@ export const Puzzle = () => {
 
     const recursiveRandomArray = async (items) => {
         const randomArray = ArrayExtended.getRandomArray(items)
-        if(checkPuzzleOrder(randomArray)) {
+        if (checkPuzzleOrder(randomArray)) {
             return await recursiveRandomArray(items)
         }
         return randomArray
@@ -73,7 +73,7 @@ export const Puzzle = () => {
 
     useEffect(() => {
         const updateWorker = () => {
-            if (typeof (Worker) !== "undefined") {
+            if (typeof (Worker) !== 'undefined') {
                 workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
                 workerRef.current.onmessage = (event) => {
                     if (event.data.event === COUNTER_MESSAGES.END) {
@@ -96,31 +96,31 @@ export const Puzzle = () => {
             setData({
                 url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
                 items,
-                ordered: false,
+                ordered: false
             })
             updateWorker()
         }
 
         switch (state.event) {
-            case PUZZLE_STATES.INIT:
-                dispatch({ type: PUZZLE_STATES.LOADING })
-                break
-            case PUZZLE_STATES.LOADING:
-                getPuzzleSource()
-                    .then(() => console.log('getPuzzleSource done !'))
-                    .catch((e) => console.log('getPuzzleSource - ERROR ', e))
-                break
-            case PUZZLE_STATES.READY:
-                postTimerMessages(COUNTER_MESSAGES.START)
-                break
-            case PUZZLE_STATES.DONE:
-                setData(currentState => ({
-                    ...currentState,
-                    items: undefined,
-                    url: ''
-                }))
-                postTimerMessages(COUNTER_MESSAGES.END)
-                break
+        case PUZZLE_STATES.INIT:
+            dispatch({ type: PUZZLE_STATES.LOADING })
+            break
+        case PUZZLE_STATES.LOADING:
+            getPuzzleSource()
+                .then(() => console.log('getPuzzleSource done !'))
+                .catch((e) => console.log('getPuzzleSource - ERROR ', e))
+            break
+        case PUZZLE_STATES.READY:
+            postTimerMessages(COUNTER_MESSAGES.START)
+            break
+        case PUZZLE_STATES.DONE:
+            setData(currentState => ({
+                ...currentState,
+                items: undefined,
+                url: ''
+            }))
+            postTimerMessages(COUNTER_MESSAGES.END)
+            break
         }
     }, [state, dispatch])
 
@@ -138,8 +138,8 @@ export const Puzzle = () => {
 
     return (
         <Fragment>
-            {state?.event === PUZZLE_STATES.READY ?
-                <DragDropContext onDragEnd={onDragEnd}>
+            {state?.event === PUZZLE_STATES.READY
+                ? <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(droppableProvided, droppableSnapshot) => (
                             <div
@@ -171,5 +171,3 @@ export const Puzzle = () => {
         </Fragment>
     )
 }
-
-
