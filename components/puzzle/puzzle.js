@@ -16,7 +16,7 @@ import { Fade } from '@mui/material'
 export const Puzzle = () => {
     const { reducer } = useContext(PuzzleContext)
     const { state, dispatch } = reducer
-    const [data, setData] = useState({ items: undefined, ordered: undefined, url: '' })
+    const [data, setData] = useState({ items: [], ordered: undefined, url: '' })
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
     const workerRef = useRef()
@@ -83,9 +83,10 @@ export const Puzzle = () => {
             workerRef.current = new Worker(new URL('../../workers/worker.js', import.meta.url))
             workerRef.current.onmessage = (event) => {
                 if (event.data.event === COUNTER_MESSAGES.END) {
-                    console.log('END - timerValue', millisecondToMinutes(event.data.timerValue))
-                    dispatch({ type: PUZZLE_STATES.LOADING, timerValue: event.data.timerValue })
-                    workerRef.current.terminate()
+                    setTimeout(() => {
+                        dispatch({ type: PUZZLE_STATES.LOADING, timerValue: event.data.timerValue })
+                        workerRef.current.terminate()
+                    }, 1000)
                 }
             }
         } else {
@@ -98,59 +99,69 @@ export const Puzzle = () => {
     }
 
     const getPuzzleSource = async () => {
-        const items = await recursiveRandomArray(getItems(4))
-        setData({
-            url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
-            items,
-            ordered: false
-        })
-        updateWorker()
+        return await recursiveRandomArray(getItems(4))
     }
 
     useEffect(() => {
+        console.log('useEffect - state event', state.event)
         switch (state.event) {
         case PUZZLE_STATES.INIT:
             dispatch({ type: PUZZLE_STATES.LOADING })
             break
         case PUZZLE_STATES.LOADING:
-            setData(currentState => ({
-                ...currentState,
-                items: undefined,
-                url: ''
-            }))
             getPuzzleSource()
-                .then(() => console.log('getPuzzleSource done !'))
+                .then((items) => {
+                    // by setting the state's url we trigger the  useFetch(data.url)
+                    // it's update the loading state listened in useEffect in line 141
+                    setData({
+                        url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
+                        items,
+                        ordered: false
+                    })
+                })
                 .catch((e) => console.log('getPuzzleSource - ERROR ', e))
             break
         case PUZZLE_STATES.READY:
+            // fade out animation
             setFade(true)
+            // create new timer worker
+            updateWorker()
+            // start timer
             postTimerMessages(COUNTER_MESSAGES.START)
             break
         case PUZZLE_STATES.DONE:
+            // fade in animation
+            setFade(false)
+            // kill timer worker
             postTimerMessages(COUNTER_MESSAGES.END)
             break
+        // case PUZZLE_STATES.END_LOADING:
+        //     if (!loading) {
+        //         dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
+        //     }
+        //     break
         }
     }, [state, dispatch])
 
+    // Triggered when the loading state is updated by the useFetch data
     useEffect(() => {
-        if (!loading) {
+        console.log('useEffect Loading', loading)
+        if (!loading && state.event === PUZZLE_STATES.END_LOADING) {
             dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
         }
-    }, [loading, response, dispatch])
+    }, [loading, response, dispatch, state])
 
     useEffect(() => {
-        setFade(false)
         if (data.ordered) {
-            setTimeout(() => {
-                dispatch({ type: PUZZLE_STATES.DONE })
-            }, 1000)
+            dispatch({ type: PUZZLE_STATES.DONE })
         }
     }, [data.ordered, dispatch])
 
     return (
         <Fragment>
-            {state?.event === PUZZLE_STATES.READY
-                ? <DragDropContext onDragEnd={onDragEnd}>
+            {state?.event === PUZZLE_STATES.LOADING
+                ? <Loading/>
+                : <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(droppableProvided, droppableSnapshot) => (
                             <div
@@ -187,7 +198,7 @@ export const Puzzle = () => {
                         )}
                     </Droppable>
                 </DragDropContext>
-                : <Loading/>}
+            }
         </Fragment>
     )
 }

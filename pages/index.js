@@ -8,6 +8,7 @@ export default function Home () {
         <div className={styles.container}>
             <PuzzleProvider>
                 <Puzzle/>
+                {/* <div>test</div> */}
             </PuzzleProvider>
         </div>
     )

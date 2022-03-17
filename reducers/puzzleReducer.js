@@ -17,11 +17,11 @@ export const PuzzleReducer = (state, action) => {
     switch (action.type) {
     case PUZZLE_STATES.INIT :
     case PUZZLE_STATES.UPDATE :
+    case PUZZLE_STATES.END_LOADING :
     case PUZZLE_STATES.DONE :
         return {
             ...state,
-            event: action.type,
-            imageUrl: ''
+            event: action.type
         }
     case PUZZLE_STATES.READY :
         return {
