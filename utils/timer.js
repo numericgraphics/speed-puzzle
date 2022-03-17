@@ -2,7 +2,7 @@ export class Timer {
     startTime = null
     endTime = null
 
-    constructor(){
+    constructor () {
         this.startTimer = this.startTimer.bind(this)
         this.endTimer = this.endTimer.bind(this)
     }

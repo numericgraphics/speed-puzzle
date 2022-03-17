@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.8.2",
+    "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "latest",
     "@mui/material": "^5.5.1",

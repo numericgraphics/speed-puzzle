@@ -1,13 +1,12 @@
 import React, { Fragment, useEffect, useState, useContext, useRef } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageSliceComponent from './imageComponent'
-import { ArrayExtended } from '../utils/array'
-import { useFetch } from '../hooks/useFetch'
-import Loading from './loading'
-import PuzzleContext from '../providers/puzzleProvider'
-import { PUZZLE_STATES } from '../reducers/puzzleReducer'
-import { COUNTER_MESSAGES } from '../utils/constants'
-import { millisecondToMinutes } from '../utils/tools'
+import { ArrayExtended, millisecondToMinutes, COUNTER_MESSAGES } from '../../utils'
+import { useFetch } from '../../hooks/useFetch'
+import Loading from '../loading/loading'
+import PuzzleContext from '../../providers/puzzleProvider'
+import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
+
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -74,7 +73,7 @@ export const Puzzle = () => {
     useEffect(() => {
         const updateWorker = () => {
             if (typeof (Worker) !== 'undefined') {
-                workerRef.current = new Worker(new URL('../worker.js', import.meta.url))
+                workerRef.current = new Worker(new URL('../../workers/worker.js', import.meta.url))
                 workerRef.current.onmessage = (event) => {
                     if (event.data.event === COUNTER_MESSAGES.END) {
                         console.log('END - timerValue', millisecondToMinutes(event.data.timerValue))

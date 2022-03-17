@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import styles from './loading.module.css'
+import styles from '../../styles/loading.module.css'
 
 const Loading = (props) => {
     // useEffect(()=>{

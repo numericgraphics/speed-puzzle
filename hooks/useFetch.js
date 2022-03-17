@@ -12,12 +12,11 @@ function useFetch (url) {
             setLoading(false)
         }
 
-        if(url) {
+        if (url) {
             fetchUrl()
                 .then(() => console.log('useFetch done !'))
                 .catch((e) => console.log('useFetch - ERROR ', e))
         }
-
     }, [url])
 
     return [response, loading]
