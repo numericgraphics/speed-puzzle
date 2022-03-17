@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, memo, useContext } from 'react'
 import PuzzleContext from '../../providers/puzzleProvider'
 
 const ImageSliceComponent = (props, ref) => {

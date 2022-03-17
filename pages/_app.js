@@ -8,6 +8,7 @@ function MyApp ({ Component, pageProps }) {
     return (
         <Fragment>
             <Head>
+                <meta name="viewport" content="initial-scale=1, width=device-width" />
                 <title>Speed Puzzle</title>
             </Head>
             <ThemeProvider theme={theme}>

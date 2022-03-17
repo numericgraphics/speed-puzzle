@@ -1,4 +1,6 @@
-export const theme = {
+import { createTheme } from '@mui/material'
+
+export const theme = createTheme({
     breakpoints: {
         keys: [
             'xs',
@@ -712,4 +714,4 @@ export const theme = {
         snackbar: 1400,
         tooltip: 1500
     }
-}
+})
