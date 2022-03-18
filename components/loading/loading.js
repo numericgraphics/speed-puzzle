@@ -11,12 +11,11 @@ const Loading = (props) => {
     const { dispatch, state } = reducer
 
     useEffect(() => {
-        console.log('Loading - useEffect', props)
+        console.log('Loading - useEffect - state', state)
         setFade(true)
         setTimeout(() => {
             setFade(false)
-            dispatch({ type: PUZZLE_STATES.END_LOADING })
-        }, 5000)
+        }, 2000)
     }, [])
 
     return (
@@ -24,16 +23,15 @@ const Loading = (props) => {
             in={fade}
             addEndListener={(node, done) => {
                 node.addEventListener('transitionend', () => {
-                    console.log('callback animation ended')
+                    !fade && dispatch({ type: PUZZLE_STATES.END_LOADING })
                     done()
                 })
             }}
         >
             <div className={styles.container}>
-                <div className={styles.subContainer}>
-                    <h1>Loading</h1>
-                    <h3>{state.timerValue && millisecondToMinutes(state.timerValue)}</h3>
-                </div>
+                <h1>Loading</h1>
+                <h3>{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}` }</h3>
+                <h3>{`Moves : ${state.moves}`}</h3>
             </div>
         </Fade>
 

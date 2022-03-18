@@ -5,9 +5,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #0070f3;
+    background-color: #f4f4f4;
 }
 
-.subContainer {
-    color: white;
-}

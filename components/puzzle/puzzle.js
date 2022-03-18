@@ -44,6 +44,8 @@ export const Puzzle = () => {
             items,
             ordered: checkPuzzleOrder(items)
         })
+
+        dispatch({ type: PUZZLE_STATES.MOVE })
     }
 
     const getListStyle = (isDraggingOver) => ({
@@ -103,7 +105,7 @@ export const Puzzle = () => {
     }
 
     useEffect(() => {
-        console.log('useEffect - state event', state.event)
+        // console.log('useEffect - state event', state.event)
         switch (state.event) {
         case PUZZLE_STATES.INIT:
             dispatch({ type: PUZZLE_STATES.LOADING })
@@ -135,27 +137,20 @@ export const Puzzle = () => {
             // kill timer worker
             postTimerMessages(COUNTER_MESSAGES.END)
             break
-        // case PUZZLE_STATES.END_LOADING:
-        //     if (!loading) {
-        //         dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
-        //     }
-        //     break
+        case PUZZLE_STATES.END_LOADING:
+            if (!loading) {
+                dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
+            } else {
+                dispatch({ type: PUZZLE_STATES.LOADING })
+            }
+            break
+        case PUZZLE_STATES.MOVE:
+            if (data.ordered) {
+                dispatch({ type: PUZZLE_STATES.DONE })
+            }
+            break
         }
     }, [state, dispatch])
-
-    // Triggered when the loading state is updated by the useFetch data
-    useEffect(() => {
-        console.log('useEffect Loading', loading)
-        if (!loading && state.event === PUZZLE_STATES.END_LOADING) {
-            dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
-        }
-    }, [loading, response, dispatch, state])
-
-    useEffect(() => {
-        if (data.ordered) {
-            dispatch({ type: PUZZLE_STATES.DONE })
-        }
-    }, [data.ordered, dispatch])
 
     return (
         <Fragment>

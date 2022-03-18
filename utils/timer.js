@@ -9,11 +9,11 @@ export class Timer {
 
     startTimer () {
         this.startTime = performance.now()
-        console.log('Timer - startTimer', this.startTime)
+        // console.log('Timer - startTimer', this.startTime)
     }
 
     endTimer () {
-        console.log('Timer - endTimer', this.startTime)
+        // console.log('Timer - endTimer', this.startTime)
         this.endTime = performance.now()
         return this.endTime - this.startTime
     }
