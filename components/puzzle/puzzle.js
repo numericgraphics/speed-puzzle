@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useContext, useRef } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { TransitionGroup } from 'react-transition-group'
 import ImageSliceComponent from './imageComponent'
-import { ArrayExtended, millisecondToMinutes, COUNTER_MESSAGES } from '../../utils'
+import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
 import { useFetch } from '../../hooks/useFetch'
 import Loading from '../loading/loading'
 import PuzzleContext from '../../providers/puzzleProvider'
@@ -16,7 +16,7 @@ import { Fade } from '@mui/material'
 export const Puzzle = () => {
     const { reducer } = useContext(PuzzleContext)
     const { state, dispatch } = reducer
-    const [data, setData] = useState({ items: [], ordered: undefined, url: '' })
+    const [data, setData] = useState({ items: [], ordered: undefined, url: '', complexity: undefined })
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
     const workerRef = useRef()
@@ -26,6 +26,13 @@ export const Puzzle = () => {
             return item.index
         })
         return ArrayExtended.arrayEquals(test, [0, 1, 2, 3])
+    }
+
+    const checkPuzzleComplexity = (array) => {
+        const test = array.map((item) => {
+            return item.index
+        })
+        return ArrayExtended.getArrayNumberComplexity(test)
     }
 
     const onDragEnd = (result) => {
@@ -63,10 +70,10 @@ export const Puzzle = () => {
             }
         ))
 
-    const getItemStyle = (isDragging, draggableStyle) => ({
-        userSelect: 'none',
-        ...draggableStyle
-    })
+    // const getItemStyle = (isDragging, draggableStyle) => ({
+    //     userSelect: 'none',
+    //     ...draggableStyle
+    // })
 
     const getRandomNumber = () => {
         return (Math.floor(Math.random() * 10))
@@ -113,12 +120,12 @@ export const Puzzle = () => {
         case PUZZLE_STATES.LOADING:
             getPuzzleSource()
                 .then((items) => {
-                    // by setting the state's url we trigger the  useFetch(data.url)
-                    // it's update the loading state listened in useEffect in line 141
+                    // by setting the state's url we trigger the useFetch(data.url)
                     setData({
                         url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
                         items,
-                        ordered: false
+                        ordered: false,
+                        complexity: checkPuzzleComplexity(items)
                     })
                 })
                 .catch((e) => console.log('getPuzzleSource - ERROR ', e))
@@ -146,7 +153,7 @@ export const Puzzle = () => {
             break
         case PUZZLE_STATES.MOVE:
             if (data.ordered) {
-                dispatch({ type: PUZZLE_STATES.DONE })
+                dispatch({ type: PUZZLE_STATES.DONE, complexity: data.complexity })
             }
             break
         }

@@ -12,17 +12,23 @@ export const InitialPuzzleState = {
     event: PUZZLE_STATES.INIT,
     imageUrl: '',
     timerValue: undefined,
-    moves: 0
+    moves: 0,
+    complexity: undefined
 }
 
 export const PuzzleReducer = (state, action) => {
     switch (action.type) {
     case PUZZLE_STATES.INIT :
     case PUZZLE_STATES.UPDATE :
-    case PUZZLE_STATES.DONE :
         return {
             ...state,
             event: action.type
+        }
+    case PUZZLE_STATES.DONE :
+        return {
+            ...state,
+            event: action.type,
+            complexity: action.complexity
         }
     case PUZZLE_STATES.READY :
         return {
@@ -48,7 +54,8 @@ export const PuzzleReducer = (state, action) => {
         return {
             ...state,
             event: action.type,
-            moves: 0
+            moves: 0,
+            complexity: undefined
         }
     }
 }

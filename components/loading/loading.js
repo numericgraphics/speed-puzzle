@@ -11,7 +11,6 @@ const Loading = (props) => {
     const { dispatch, state } = reducer
 
     useEffect(() => {
-        console.log('Loading - useEffect - state', state)
         setFade(true)
         setTimeout(() => {
             setFade(false)
@@ -31,7 +30,8 @@ const Loading = (props) => {
             <div className={styles.container}>
                 <h1>Loading</h1>
                 <h3>{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}` }</h3>
-                <h3>{`Moves : ${state.moves}`}</h3>
+                <h3>{`Moves : ${state.moves > 0 && state.moves}`}</h3>
+                <h3>{`Complexity : ${state.complexity && state.complexity}`}</h3>
             </div>
         </Fade>
 
