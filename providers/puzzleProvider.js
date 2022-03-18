@@ -1,9 +1,7 @@
 import React, { useEffect, createContext, useReducer } from 'react'
 import { InitialPuzzleState, PuzzleReducer, PUZZLE_STATES } from '../reducers/puzzleReducer'
 
-const PuzzleContext = createContext(undefined)
-
-export default PuzzleContext
+export const PuzzleContext = createContext(undefined)
 
 export function PuzzleProvider ({ children }) {
     const [state, dispatch] = useReducer(PuzzleReducer, InitialPuzzleState)

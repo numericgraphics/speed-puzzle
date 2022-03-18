@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useState, useContext, useRef } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { TransitionGroup } from 'react-transition-group'
+
 import { ImageSliceComponent } from './imageComponent'
 import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
-import { useFetch } from '../../hooks/useFetch'
+import { useFetch, useSpeedPuzzle } from '../../hooks'
 import { Loading } from '../loading'
-import PuzzleContext from '../../providers/puzzleProvider'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { Fade } from '@mui/material'
 
@@ -14,7 +14,7 @@ import { Fade } from '@mui/material'
 // patch package solution : https://callstack.com/blog/say-goodbye-to-old-fashioned-forks-thanks-to-the-patch-package/
 
 export const Puzzle = () => {
-    const { reducer } = useContext(PuzzleContext)
+    const { reducer } = useSpeedPuzzle()
     const { state, dispatch } = reducer
     const [data, setData] = useState({ items: [], ordered: undefined, url: '', complexity: undefined })
     const [fade, setFade] = useState(false)
@@ -122,7 +122,7 @@ export const Puzzle = () => {
                 .then((items) => {
                     // by setting the state's url we trigger the useFetch(data.url)
                     setData({
-                        url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
+                        url: `https://source.unsplash.com/600x600/?beach?sig={'${getRandomNumber()}`,
                         items,
                         ordered: false,
                         complexity: checkPuzzleComplexity(items)
@@ -168,7 +168,7 @@ export const Puzzle = () => {
                         {(droppableProvided, droppableSnapshot) => (
                             <div
                                 ref={droppableProvided.innerRef}
-                                style={getListStyle(data.ordered)}
+                                // style={getListStyle(data.ordered)}
                             >
                                 <TransitionGroup>
                                     {data.items.map((item, index) => (
