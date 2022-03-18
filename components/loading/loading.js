@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../../styles/loading.module.css'
 import { Fade } from '@mui/material'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'

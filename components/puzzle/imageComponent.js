@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import { useSpeedPuzzle } from '../../hooks'
 import { useTheme } from '@mui/material'
