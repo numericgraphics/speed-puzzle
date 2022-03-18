@@ -55,11 +55,11 @@ export const Puzzle = () => {
         dispatch({ type: PUZZLE_STATES.MOVE })
     }
 
-    const getListStyle = (isDraggingOver) => ({
-        background: 'white',
-        margin: 8,
-        width: 480
-    })
+    // const getListStyle = (isDraggingOver) => ({
+    //     background: 'white',
+    //     margin: 8,
+    //     width: 480
+    // })
 
     const getItems = (count) =>
         Array.from({ length: count }, (v, k) => k).map((k) => (

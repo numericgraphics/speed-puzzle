@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles'
 import { useSpeedPuzzle } from '../../hooks'
 import { useTheme } from '@mui/material'
 
-
 // eslint-disable-next-line react/display-name
 export const ImageSliceComponent = forwardRef((props, ref) => {
     const { reducer } = useSpeedPuzzle()
