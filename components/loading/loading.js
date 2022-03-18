@@ -37,4 +37,3 @@ export const Loading = (props) => {
 
     )
 }
-

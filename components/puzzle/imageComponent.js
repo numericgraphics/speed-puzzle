@@ -27,4 +27,3 @@ export const ImageSliceComponent = forwardRef((props, ref) => {
         </div>
     )
 })
-
