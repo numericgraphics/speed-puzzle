@@ -1,7 +1,8 @@
-import React, { forwardRef, memo, useContext } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import PuzzleContext from '../../providers/puzzleProvider'
 
-const ImageSliceComponent = (props, ref) => {
+// eslint-disable-next-line react/display-name
+export const ImageSliceComponent = forwardRef((props, ref) => {
     const { reducer } = useContext(PuzzleContext)
     const { state } = reducer
 
@@ -25,6 +26,5 @@ const ImageSliceComponent = (props, ref) => {
             <div style={getItemImage(props.index)} />
         </div>
     )
-}
+})
 
-export default forwardRef(ImageSliceComponent)
