@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 import React, { Fragment } from 'react'
 import Head from 'next/head'
-import { ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { theme } from '../themes'
 
 function MyApp ({ Component, pageProps }) {
@@ -11,6 +11,7 @@ function MyApp ({ Component, pageProps }) {
                 <meta name="viewport" content="initial-scale=1, width=device-width" />
                 <title>Speed Puzzle</title>
             </Head>
+            <CssBaseline />
             <ThemeProvider theme={theme}>
                 <Component {...pageProps} />
             </ThemeProvider>

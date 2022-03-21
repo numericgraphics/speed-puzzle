@@ -5,6 +5,7 @@ export const PUZZLE_STATES = Object.freeze({
     END_LOADING: 'endLoading',
     DONE: 'done',
     UPDATE: 'update',
+    END_GAME: 'endGame',
     MOVE: 'move'
 })
 
@@ -13,12 +14,14 @@ export const InitialPuzzleState = {
     imageUrl: '',
     timerValue: undefined,
     moves: 0,
-    complexity: undefined
+    complexity: undefined,
+    challenges: 0
 }
 
 export const PuzzleReducer = (state, action) => {
     switch (action.type) {
     case PUZZLE_STATES.INIT :
+    case PUZZLE_STATES.END_GAME :
     case PUZZLE_STATES.UPDATE :
         return {
             ...state,
@@ -28,7 +31,8 @@ export const PuzzleReducer = (state, action) => {
         return {
             ...state,
             event: action.type,
-            complexity: action.complexity
+            complexity: action.complexity,
+            challenges: state.challenges + 1
         }
     case PUZZLE_STATES.READY :
         return {

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clearAll": "rm -rf node_modules && rm package-lock.json && rm yarn.lock && npm install"
   },
   "dependencies": {
     "@emotion/cache": "^11.7.1",

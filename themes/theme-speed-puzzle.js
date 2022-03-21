@@ -544,10 +544,11 @@ export const theme = createTheme({
         fontWeightSemiBold: 600,
         fontWeightExtraBold: 800,
         h1: {
-            fontFamily: '"PlusJakartaSans-ExtraBold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Fredoka" , sans-serif',
             fontSize: 'clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)',
             fontWeight: 800,
-            lineHeight: 1.1142857142857143
+            lineHeight: 1.1142857142857143,
+            color: 'red'
         },
         h2: {
             fontFamily: '"PlusJakartaSans-ExtraBold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
