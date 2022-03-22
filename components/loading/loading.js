@@ -1,55 +1,51 @@
-import React, { useEffect, useState } from 'react'
-import { Fade, keyframes, Typography } from '@mui/material'
-
-import styles from '../../styles/loading.module.css'
+import React, { Fragment, useEffect, useState } from 'react'
+import { Box, Fade, Paper, Typography, useTheme } from '@mui/material'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { millisecondToMinutes } from '../../utils'
 import { useSpeedPuzzle } from '../../hooks'
-
-const InDown = keyframes`
-  from {
-    transform: translate3d(0, -100%, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }`
+import { bounceIn, bounceOut } from '../../styles'
 
 export const Loading = (props) => {
-    const [fade, setFade] = useState(false)
+    const [open, setOpen] = useState(true)
+    const theme = useTheme()
+    const { custom } = theme
     const { reducer } = useSpeedPuzzle()
     const { dispatch, state } = reducer
 
     useEffect(() => {
-        setFade(true)
         setTimeout(() => {
-            setFade(false)
-        }, 2000)
+            setOpen(false)
+        }, 3000)
     }, [])
 
     return (
-        <Fade
-            in={fade}
-            addEndListener={(node, done) => {
-                node.addEventListener('transitionend', () => {
-                    !fade && dispatch({ type: PUZZLE_STATES.END_LOADING })
-                    done()
-                })
-            }}
+        <Box
+            sx={[custom.box, { animation: open ? `${bounceIn} 0.8s` : `${bounceOut} 0.4s` }]}
+            onAnimationEnd={() => {
+                !open && dispatch({ type: PUZZLE_STATES.END_LOADING })
+            }
+            }
         >
-            <div className={styles.container}>
-                <Typography sx={{ animation: `${InDown} 1s cubic-bezier(1, -0.55, 0.265, 2.55)` }} variant="h1">Bravo !</Typography>
-                <Typography sx={{ animation: `${InDown} 1.2s cubic-bezier(0.6, -0.55, 0.265, 2.55)` }} variant="h3">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}` }</Typography>
-                <Typography sx={{ animation: `${InDown} 1.3s cubic-bezier(0.5, -0.55, 0.265, 2.55)` }} variant="h3">{`Moves : ${state.moves > 0 && state.moves}` }</Typography>
-                <Typography sx={{ animation: `${InDown} 1.4s cubic-bezier(0.4, -0.55, 0.265, 2.55)` }} variant="h3">{`Complexity : ${state.complexity && state.complexity}` }</Typography>
-            </div>
-        </Fade>
+            <Typography
+                variant="h1"
+            >
+                {state.timerValue ? 'Bravo !' : 'Loading'}
+            </Typography>
+            <Box sx={{ display: 'flex' }}>
+                <Paper
+                    variant="rounded"
+                    elevation={3}
+                >
+                    {state.timerValue &&
+                        <Fragment>
+                            <Typography variant="body1">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
+                            <Typography variant="body1">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
+                            <Typography variant="body1">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
+                        </Fragment>
+                    }
+                </Paper>
+            </Box>
+        </Box>
 
     )
 }
-
-/*
-<Typography sx={{ animation: `${InDown} 1s cubic-bezier(1, -0.55, 0.265, 2.55)` }} variant="h1">Bravo !</Typography>
-                <Typography sx={{ animation: `${InDown} 1.2s cubic-bezier(0.6, -0.55, 0.265, 2.55)` }} variant="h3">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}` }</Typography>
-                <Typography sx={{ animation: `${InDown} 1.3s cubic-bezier(0.5, -0.55, 0.265, 2.55)` }} variant="h3">{`Moves : ${state.moves > 0 && state.moves}` }</Typography>
-                <Typography sx={{ animation: `${InDown} 1.4s cubic-bezier(0.4, -0.55, 0.265, 2.55)` }} variant="h3">{`Complexity : ${state.complexity && state.complexity}` }</Typography>
- */

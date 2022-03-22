@@ -9,6 +9,7 @@ import { Loading } from '../loading'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { Fade } from '@mui/material'
 import { Result } from '../result'
+import { Init } from '../init'
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -116,7 +117,7 @@ export const Puzzle = () => {
         // console.log('useEffect - state event', state.event)
         switch (state.event) {
         case PUZZLE_STATES.INIT:
-            dispatch({ type: PUZZLE_STATES.LOADING })
+            // dispatch({ type: PUZZLE_STATES.LOADING })
             break
         case PUZZLE_STATES.LOADING:
             getPuzzleSource()
@@ -136,7 +137,7 @@ export const Puzzle = () => {
             setFade(true)
             // create new timer worker
             updateWorker()
-            // start timer
+            // init timer
             postTimerMessages(COUNTER_MESSAGES.START)
             break
         case PUZZLE_STATES.DONE:
@@ -168,6 +169,8 @@ export const Puzzle = () => {
 
             {(() => {
                 switch (state?.event) {
+                case PUZZLE_STATES.INIT:
+                    return <Init/>
                 case PUZZLE_STATES.LOADING:
                     return <Loading/>
                 case PUZZLE_STATES.END_GAME:
