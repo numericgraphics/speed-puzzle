@@ -13,9 +13,6 @@ export const Init = (props) => {
     const { dispatch } = reducer
     const onClick = () => {
         setOpen(false)
-        setTimeout(() => {
-            dispatch({ type: PUZZLE_STATES.LOADING })
-        }, 3000)
     }
 
     useEffect(() => {
@@ -23,7 +20,13 @@ export const Init = (props) => {
     }, [])
 
     return (
-        <Box sx={[custom.box, { animation: open ? `${bounceIn} 1s forwards` : `${bounceOut} 0.5s forwards` }]}>
+        <Box
+            sx={[custom.box, { animation: open ? `${bounceIn} 1s forwards` : `${bounceOut} 0.5s forwards` }]}
+            onAnimationEnd={() => {
+                !open && dispatch({ type: PUZZLE_STATES.LOADING })
+            }
+            }
+        >
             <Typography variant="h1">Speedy Puzzle</Typography>
             <Typography variant="h6">Put the elements back in order to reconstitute the picture. Take your time, make as few moves as possible...</Typography>
             <Button variant="contained" sx={{ mt: 6 }} onClick={onClick}>Let's Start!</Button>

@@ -21,11 +21,16 @@ export const InitialPuzzleState = {
 export const PuzzleReducer = (state, action) => {
     switch (action.type) {
     case PUZZLE_STATES.INIT :
-    case PUZZLE_STATES.END_GAME :
     case PUZZLE_STATES.UPDATE :
         return {
             ...state,
             event: action.type
+        }
+    case PUZZLE_STATES.END_GAME :
+        return {
+            ...state,
+            event: action.type,
+            challenges: 0
         }
     case PUZZLE_STATES.DONE :
         return {

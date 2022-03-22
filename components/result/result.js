@@ -1,29 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Fade, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { Box, Button, Typography, useTheme } from '@mui/material'
 
-import styles from '../../styles/loading.module.css'
 import { useSpeedPuzzle } from '../../hooks'
-import { InDown } from '../../styles'
+import { bounceIn, bounceOut, InDown } from '../../styles'
+import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 
 export const Result = (props) => {
-    const [fade, setFade] = useState(false)
+    const [open, setOpen] = useState(true)
+    const theme = useTheme()
+    const { custom } = theme
     const { reducer } = useSpeedPuzzle()
     const { dispatch } = reducer
-
-    useEffect(() => {
-        setFade(true)
-    }, [])
+    const onClick = () => {
+        setOpen(false)
+    }
 
     return (
-        <Fade
-            in={fade}
+        <Box
+            sx={[custom.box, { animation: open ? `${bounceIn} 1s forwards` : `${bounceOut} 0.5s forwards` }]}
+            onAnimationEnd={() => {
+                !open && dispatch({ type: PUZZLE_STATES.LOADING })
+            }
+            }
         >
-            <div className={styles.container}>
-                <Typography sx={{ animation: `${InDown} 1s cubic-bezier(1, -0.55, 0.265, 2.55)` }} variant="h1">This is the end !</Typography>
-                <Typography sx={{ animation: `${InDown} 1.2s cubic-bezier(0.6, -0.55, 0.265, 2.55)` }} variant="h3">{'Score : ' }</Typography>
-                <Button variant="contained">Do it again !</Button>
-            </div>
-        </Fade>
+            <Typography sx={{ animation: `${InDown} 1s cubic-bezier(1, -0.55, 0.265, 2.55)` }} variant="h1">This is the end !</Typography>
+            <Typography sx={{ animation: `${InDown} 1.2s cubic-bezier(0.6, -0.55, 0.265, 2.55)` }} variant="h3">{'Score : ' }</Typography>
+            <Button variant="contained" sx={{ mt: 6 }} onClick={onClick} >Do it again !</Button>
+        </Box>
 
     )
 }

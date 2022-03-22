@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Box, Fade, Paper, Typography, useTheme } from '@mui/material'
+import { Box, Paper, Typography, useTheme } from '@mui/material'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { millisecondToMinutes } from '../../utils'
 import { useSpeedPuzzle } from '../../hooks'
@@ -31,20 +31,22 @@ export const Loading = (props) => {
             >
                 {state.timerValue ? 'Bravo !' : 'Loading'}
             </Typography>
+            {state.timerValue &&
             <Box sx={{ display: 'flex' }}>
                 <Paper
                     variant="rounded"
                     elevation={3}
                 >
-                    {state.timerValue &&
-                        <Fragment>
-                            <Typography variant="body1">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
-                            <Typography variant="body1">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
-                            <Typography variant="body1">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
-                        </Fragment>
-                    }
+
+                    <Fragment>
+                        <Typography variant="body1">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
+                        <Typography variant="body1">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
+                        <Typography variant="body1">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
+                    </Fragment>
+
                 </Paper>
             </Box>
+            }
         </Box>
 
     )
