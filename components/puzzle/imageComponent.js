@@ -10,7 +10,7 @@ export const ImageSliceComponent = forwardRef((props, ref) => {
     const theme = useTheme()
 
     useEffect(() => {
-        console.log('ImageSliceComponent - init', props)
+        // console.log('ImageSliceComponent - init', props)
     }, [])
 
     const ItemImage = styled('div')(({

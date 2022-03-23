@@ -39,9 +39,9 @@ export const Loading = (props) => {
                 >
 
                     <Fragment>
-                        <Typography variant="body1">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
-                        <Typography variant="body1">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
-                        <Typography variant="body1">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
+                        <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
+                        <Typography variant="h5">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
+                        <Typography variant="h5">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
                     </Fragment>
 
                 </Paper>

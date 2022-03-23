@@ -72,10 +72,14 @@ export const Puzzle = () => {
             }
         ))
 
-    // const getItemStyle = (isDragging, draggableStyle) => ({
-    //     userSelect: 'none',
-    //     ...draggableStyle
-    // })
+
+    const getItemStyle = (isDragging, draggableStyle) => {
+        return {
+            userSelect: 'none',
+            filter: isDragging ? 'drop-shadow(0 0 0.75rem crimson)' : 'none',
+            ...draggableStyle
+        }
+    }
 
     const getRandomNumber = () => {
         return (Math.floor(Math.random() * 10))
@@ -196,10 +200,10 @@ export const Puzzle = () => {
                                                             ref={draggableProvided.innerRef}
                                                             {...draggableProvided.draggableProps}
                                                             {...draggableProvided.dragHandleProps}
-                                                            // style={getItemStyle(
-                                                            //     draggableSnapshot.isDragging,
-                                                            //     draggableProvided.draggableProps.style
-                                                            // )}
+                                                            style={getItemStyle(
+                                                                draggableSnapshot.isDragging,
+                                                                draggableProvided.draggableProps.style
+                                                            )}
                                                             index={item.index}
                                                         />
                                                     </Fade>

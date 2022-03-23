@@ -23,8 +23,8 @@ export const Result = (props) => {
             }
             }
         >
-            <Typography sx={{ animation: `${InDown} 1s cubic-bezier(1, -0.55, 0.265, 2.55)` }} variant="h1">This is the end !</Typography>
-            <Typography sx={{ animation: `${InDown} 1.2s cubic-bezier(0.6, -0.55, 0.265, 2.55)` }} variant="h3">{'Score : ' }</Typography>
+            <Typography variant="h1">This is the end !</Typography>
+            <Typography variant="h3">{'Score : ' }</Typography>
             <Button variant="contained" sx={{ mt: 6 }} onClick={onClick} >Do it again !</Button>
         </Box>
 
