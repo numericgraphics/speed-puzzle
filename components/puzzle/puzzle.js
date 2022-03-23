@@ -72,7 +72,6 @@ export const Puzzle = () => {
             }
         ))
 
-
     const getItemStyle = (isDragging, draggableStyle) => {
         return {
             userSelect: 'none',

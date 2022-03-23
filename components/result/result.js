@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, Typography, useTheme } from '@mui/material'
 
 import { useSpeedPuzzle } from '../../hooks'
-import { bounceIn, bounceOut, InDown } from '../../styles'
+import { bounceIn, bounceOut } from '../../styles'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 
 export const Result = (props) => {
