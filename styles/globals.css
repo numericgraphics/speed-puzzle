@@ -2,8 +2,6 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   overflow: hidden;
 }
 
@@ -15,3 +13,17 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@keyframes InDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/*.fadeInDown {*/
+/*  animation-name: fadeInDown;*/
+/*}*/

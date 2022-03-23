@@ -1,20 +1,22 @@
-import React, { Fragment, useEffect, useState, useContext, useRef } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { TransitionGroup } from 'react-transition-group'
+
 import { ImageSliceComponent } from './imageComponent'
 import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
-import { useFetch } from '../../hooks/useFetch'
+import { useFetch, useSpeedPuzzle } from '../../hooks'
 import { Loading } from '../loading'
-import PuzzleContext from '../../providers/puzzleProvider'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { Fade } from '@mui/material'
+import { Result } from '../result'
+import { Init } from '../init'
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
 // patch package solution : https://callstack.com/blog/say-goodbye-to-old-fashioned-forks-thanks-to-the-patch-package/
 
 export const Puzzle = () => {
-    const { reducer } = useContext(PuzzleContext)
+    const { reducer } = useSpeedPuzzle()
     const { state, dispatch } = reducer
     const [data, setData] = useState({ items: [], ordered: undefined, url: '', complexity: undefined })
     const [fade, setFade] = useState(false)
@@ -55,11 +57,11 @@ export const Puzzle = () => {
         dispatch({ type: PUZZLE_STATES.MOVE })
     }
 
-    const getListStyle = (isDraggingOver) => ({
-        background: 'white',
-        margin: 8,
-        width: 480
-    })
+    // const getListStyle = (isDraggingOver) => ({
+    //     background: 'white',
+    //     margin: 8,
+    //     width: 480
+    // })
 
     const getItems = (count) =>
         Array.from({ length: count }, (v, k) => k).map((k) => (
@@ -70,10 +72,14 @@ export const Puzzle = () => {
             }
         ))
 
-    // const getItemStyle = (isDragging, draggableStyle) => ({
-    //     userSelect: 'none',
-    //     ...draggableStyle
-    // })
+
+    const getItemStyle = (isDragging, draggableStyle) => {
+        return {
+            userSelect: 'none',
+            filter: isDragging ? 'drop-shadow(0 0 0.75rem crimson)' : 'none',
+            ...draggableStyle
+        }
+    }
 
     const getRandomNumber = () => {
         return (Math.floor(Math.random() * 10))
@@ -115,14 +121,14 @@ export const Puzzle = () => {
         // console.log('useEffect - state event', state.event)
         switch (state.event) {
         case PUZZLE_STATES.INIT:
-            dispatch({ type: PUZZLE_STATES.LOADING })
+            // dispatch({ type: PUZZLE_STATES.LOADING })
             break
         case PUZZLE_STATES.LOADING:
             getPuzzleSource()
                 .then((items) => {
                     // by setting the state's url we trigger the useFetch(data.url)
                     setData({
-                        url: `https://source.unsplash.com/640x480/?beach?sig={'${getRandomNumber()}`,
+                        url: `https://source.unsplash.com/600x600/?beach?sig={'${getRandomNumber()}`,
                         items,
                         ordered: false,
                         complexity: checkPuzzleComplexity(items)
@@ -135,7 +141,7 @@ export const Puzzle = () => {
             setFade(true)
             // create new timer worker
             updateWorker()
-            // start timer
+            // init timer
             postTimerMessages(COUNTER_MESSAGES.START)
             break
         case PUZZLE_STATES.DONE:
@@ -154,6 +160,9 @@ export const Puzzle = () => {
         case PUZZLE_STATES.MOVE:
             if (data.ordered) {
                 dispatch({ type: PUZZLE_STATES.DONE, complexity: data.complexity })
+                if (state.challenges === 2) {
+                    dispatch({ type: PUZZLE_STATES.END_GAME })
+                }
             }
             break
         }
@@ -161,46 +170,56 @@ export const Puzzle = () => {
 
     return (
         <Fragment>
-            {state?.event === PUZZLE_STATES.LOADING
-                ? <Loading/>
-                : <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable">
-                        {(droppableProvided, droppableSnapshot) => (
-                            <div
-                                ref={droppableProvided.innerRef}
-                                style={getListStyle(data.ordered)}
-                            >
-                                <TransitionGroup>
-                                    {data.items.map((item, index) => (
 
-                                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                                            {(draggableProvided, draggableSnapshot) => (
-                                                <Fade
-                                                    key={item} timeout={500 * index}
-                                                    in={fade}
-                                                >
-                                                    <ImageSliceComponent
-                                                        ref={draggableProvided.innerRef}
-                                                        {...draggableProvided.draggableProps}
-                                                        {...draggableProvided.dragHandleProps}
-                                                        // style={getItemStyle(
-                                                        //     draggableSnapshot.isDragging,
-                                                        //     draggableProvided.draggableProps.style
-                                                        // )}
-                                                        index={item.index}
-                                                    />
-                                                </Fade>
-                                            )}
-                                        </Draggable>
+            {(() => {
+                switch (state?.event) {
+                case PUZZLE_STATES.INIT:
+                    return <Init/>
+                case PUZZLE_STATES.LOADING:
+                    return <Loading/>
+                case PUZZLE_STATES.END_GAME:
+                    return <Result/>
+                default:
+                    return <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable">
+                            {(droppableProvided, droppableSnapshot) => (
+                                <div
+                                    ref={droppableProvided.innerRef}
+                                    // style={getListStyle(data.ordered)}
+                                >
+                                    <TransitionGroup>
+                                        {data.items.map((item, index) => (
 
-                                    ))}
-                                </TransitionGroup>
-                                {droppableProvided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-            }
+                                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {(draggableProvided, draggableSnapshot) => (
+                                                    <Fade
+                                                        key={item} timeout={500 * index}
+                                                        in={fade}
+                                                    >
+                                                        <ImageSliceComponent
+                                                            ref={draggableProvided.innerRef}
+                                                            {...draggableProvided.draggableProps}
+                                                            {...draggableProvided.dragHandleProps}
+                                                            style={getItemStyle(
+                                                                draggableSnapshot.isDragging,
+                                                                draggableProvided.draggableProps.style
+                                                            )}
+                                                            index={item.index}
+                                                        />
+                                                    </Fade>
+                                                )}
+                                            </Draggable>
+
+                                        ))}
+                                    </TransitionGroup>
+                                    {droppableProvided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                }
+            })()}
+
         </Fragment>
     )
 }

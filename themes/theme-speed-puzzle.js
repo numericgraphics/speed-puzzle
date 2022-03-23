@@ -291,6 +291,17 @@ export const theme = createTheme({
                             boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.5)'
                         }
                     }
+                },
+                rounded: {
+                    display: 'block',
+                    borderColor: '#ffffff',
+                    backgroundColor: '#ffffff',
+                    padding: '8px 16px',
+                    'a&, button&': {
+                        '&:hover': {
+                            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 }
             }
         },
@@ -544,10 +555,11 @@ export const theme = createTheme({
         fontWeightSemiBold: 600,
         fontWeightExtraBold: 800,
         h1: {
-            fontFamily: '"PlusJakartaSans-ExtraBold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Fredoka" , sans-serif',
             fontSize: 'clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)',
             fontWeight: 800,
-            lineHeight: 1.1142857142857143
+            lineHeight: 1.1142857142857143,
+            color: 'red'
         },
         h2: {
             fontFamily: '"PlusJakartaSans-ExtraBold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
@@ -557,31 +569,35 @@ export const theme = createTheme({
             color: '#E7EBF0'
         },
         h3: {
-            fontFamily: '"PlusJakartaSans-Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Caveat", cursive',
             fontSize: '2.25rem',
             lineHeight: 1.2222222222222223,
             letterSpacing: 0.2,
+            color: '#007fff',
             fontWeight: 400
         },
         h4: {
-            fontFamily: '"PlusJakartaSans-Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Caveat", cursive',
             fontSize: '1.75rem',
             lineHeight: 1.5,
             letterSpacing: 0.2,
+            color: '#007fff',
             fontWeight: 400
         },
         h5: {
-            fontFamily: '"PlusJakartaSans-Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Caveat", cursive',
             fontSize: '1.5rem',
             lineHeight: 1.5,
             letterSpacing: 0.1,
-            color: '#66B2FF',
+            color: '#007fff',
             fontWeight: 400
         },
         h6: {
+            fontFamily: '"Caveat", cursive',
             fontSize: '1.25rem',
             lineHeight: 1.5,
-            fontFamily: '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            letterSpacing: 0.08,
+            color: '#007fff',
             fontWeight: 500
         },
         button: {
@@ -600,10 +616,11 @@ export const theme = createTheme({
             fontFamily: '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"'
         },
         body1: {
-            fontSize: '1rem',
+            fontSize: '1.1rem',
             lineHeight: 1.5,
             letterSpacing: 0,
-            fontFamily: '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+            fontFamily: '"Caveat", cursive',
+            color: '#007fff',
             fontWeight: 400
         },
         body2: {
@@ -713,5 +730,16 @@ export const theme = createTheme({
         modal: 1300,
         snackbar: 1400,
         tooltip: 1500
+    },
+    custom: {
+        box: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            width: 1 / 2,
+            p: 2
+        }
     }
 })
