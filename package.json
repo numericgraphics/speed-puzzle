@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clearAll": "rm -rf node_modules && rm package-lock.json && npm install"
+    "clearAll": "rm -rf node_modules && rm package-lock.json && npm install",
+    "eslint": "eslint --ext .js ./components ./hooks ./pages ./reducers ./utils ./workers ./themes"
   },
   "dependencies": {
     "@emotion/cache": "^11.7.1",
