@@ -28,24 +28,16 @@ export const Loading = (props) => {
         >
             <Typography
                 variant="h1"
+                sx={{ mb: 4 }}
             >
                 {state.timerValue ? 'Bravo !' : 'Loading'}
             </Typography>
             {state.timerValue &&
-            <Box sx={{ display: 'flex' }}>
-                <Paper
-                    variant="rounded"
-                    elevation={3}
-                >
-
-                    <Fragment>
-                        <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
-                        <Typography variant="h5">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
-                        <Typography variant="h5">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
-                    </Fragment>
-
-                </Paper>
-            </Box>
+                <Fragment>
+                    <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
+                    <Typography variant="h5">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
+                    <Typography variant="h5">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
+                </Fragment>
             }
         </Box>
 

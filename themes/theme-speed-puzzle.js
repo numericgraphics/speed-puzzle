@@ -558,7 +558,7 @@ export const theme = createTheme({
             fontFamily: '"Fredoka" , sans-serif',
             fontSize: 'clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)',
             fontWeight: 800,
-            lineHeight: 1.1142857142857143,
+            lineHeight: 0.8,
             color: 'red'
         },
         h2: {
@@ -579,7 +579,7 @@ export const theme = createTheme({
         h4: {
             fontFamily: '"Caveat", cursive',
             fontSize: '1.75rem',
-            lineHeight: 1.5,
+            lineHeight: 1,
             letterSpacing: 0.2,
             color: '#007fff',
             fontWeight: 400
@@ -738,7 +738,7 @@ export const theme = createTheme({
             justifyContent: 'center',
             alignItems: 'center',
             textAlign: 'center',
-            width: 1 / 2,
+            width: '75%',
             p: 2
         }
     }

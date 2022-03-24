@@ -27,7 +27,7 @@ export const Init = (props) => {
             }
             }
         >
-            <Typography variant="h1">Speedy Puzzle</Typography>
+            <Typography variant="h1" sx={{ mb: 4 }} >Speedy Puzzle</Typography>
             <Typography variant="h4">Put the elements back in order to reconstitute the picture. Take your time, make as few moves as possible...</Typography>
             <Button variant="contained" sx={{ mt: 6 }} onClick={onClick}>Go !</Button>
         </Box>

@@ -7,7 +7,7 @@ import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
 import { useFetch, useSpeedPuzzle } from '../../hooks'
 import { Loading } from '../loading'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
-import { Fade } from '@mui/material'
+import { Fade, useTheme } from '@mui/material'
 import { Result } from '../result'
 import { Init } from '../init'
 
@@ -22,6 +22,7 @@ export const Puzzle = () => {
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
     const workerRef = useRef()
+    const theme = useTheme()
 
     const checkPuzzleOrder = (array) => {
         const test = array.map((item) => {
@@ -57,12 +58,6 @@ export const Puzzle = () => {
         dispatch({ type: PUZZLE_STATES.MOVE })
     }
 
-    // const getListStyle = (isDraggingOver) => ({
-    //     background: 'white',
-    //     margin: 8,
-    //     width: 480
-    // })
-
     const getItems = (count) =>
         Array.from({ length: count }, (v, k) => k).map((k) => (
             {
@@ -72,13 +67,11 @@ export const Puzzle = () => {
             }
         ))
 
-    const getItemStyle = (isDragging, draggableStyle) => {
-        return {
-            userSelect: 'none',
-            filter: isDragging ? 'drop-shadow(0 0 0.75rem crimson)' : 'none',
-            ...draggableStyle
-        }
-    }
+    const getItemStyle = (isDragging, draggableStyle) => ({
+        userSelect: 'none',
+        filter: isDragging ? 'drop-shadow(0 0 0.25rem crimson)' : 'none',
+        ...draggableStyle
+    })
 
     const getRandomNumber = () => {
         return (Math.floor(Math.random() * 10))
@@ -184,7 +177,6 @@ export const Puzzle = () => {
                             {(droppableProvided, droppableSnapshot) => (
                                 <div
                                     ref={droppableProvided.innerRef}
-                                    // style={getListStyle(data.ordered)}
                                 >
                                     <TransitionGroup>
                                         {data.items.map((item, index) => (
@@ -195,7 +187,7 @@ export const Puzzle = () => {
                                                         key={item} timeout={500 * index}
                                                         in={fade}
                                                     >
-                                                        <ImageSliceComponent
+                                                        <div
                                                             ref={draggableProvided.innerRef}
                                                             {...draggableProvided.draggableProps}
                                                             {...draggableProvided.dragHandleProps}
@@ -203,9 +195,11 @@ export const Puzzle = () => {
                                                                 draggableSnapshot.isDragging,
                                                                 draggableProvided.draggableProps.style
                                                             )}
-                                                            index={item.index}
-                                                        />
+                                                        >
+                                                            <ImageSliceComponent index={item.index} theme={theme} state={state} />
+                                                        </div>
                                                     </Fade>
+
                                                 )}
                                             </Draggable>
 
