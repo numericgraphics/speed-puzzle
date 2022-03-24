@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Box, Paper, Typography, useTheme } from '@mui/material'
+import { Box, Typography, useTheme } from '@mui/material'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { millisecondToMinutes } from '../../utils'
 import { useSpeedPuzzle } from '../../hooks'
