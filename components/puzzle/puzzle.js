@@ -18,7 +18,8 @@ import { Init } from '../init'
 export const Puzzle = () => {
     const { reducer } = useSpeedPuzzle()
     const { state, dispatch } = reducer
-    const [data, setData] = useState({ items: [], ordered: undefined, url: '', complexity: undefined })
+    const [data, setData] = useState({ items: [], url: '' })
+    const [game, setGame] = useState({ complexity: undefined, timerValue: 0 })
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
     const workerRef = useRef()
@@ -51,11 +52,10 @@ export const Puzzle = () => {
 
         setData({
             ...data,
-            items,
-            ordered: checkPuzzleOrder(items)
+            items
         })
 
-        dispatch({ type: PUZZLE_STATES.MOVE })
+        dispatch({ type: PUZZLE_STATES.MOVE, ordered: checkPuzzleOrder(items) })
     }
 
     const getItems = (count) =>
@@ -90,10 +90,11 @@ export const Puzzle = () => {
             workerRef.current = new Worker(new URL('../../workers/worker.js', import.meta.url))
             workerRef.current.onmessage = (event) => {
                 if (event.data.event === COUNTER_MESSAGES.END) {
-                    setTimeout(() => {
-                        dispatch({ type: PUZZLE_STATES.LOADING, timerValue: event.data.timerValue })
-                        workerRef.current.terminate()
-                    }, 1000)
+                    setGame({
+                        ...game,
+                        timerValue: event.data.timerValue
+                    })
+                    workerRef.current.terminate()
                 }
             }
         } else {
@@ -110,7 +111,6 @@ export const Puzzle = () => {
     }
 
     useEffect(() => {
-        // console.log('useEffect - state event', state.event)
         switch (state.event) {
         case PUZZLE_STATES.INIT:
             // dispatch({ type: PUZZLE_STATES.LOADING })
@@ -121,9 +121,12 @@ export const Puzzle = () => {
                     // by setting the state's url we trigger the useFetch(data.url)
                     setData({
                         url: `https://source.unsplash.com/600x600/?beach?sig={'${getRandomNumber()}`,
-                        items,
-                        ordered: false,
-                        complexity: checkPuzzleComplexity(items)
+                        items
+                    })
+                    setGame({
+                        ...game,
+                        complexity: checkPuzzleComplexity(items),
+                        timerValue: 0
                     })
                 })
                 .catch((e) => console.log('getPuzzleSource - ERROR ', e))
@@ -150,12 +153,15 @@ export const Puzzle = () => {
             }
             break
         case PUZZLE_STATES.MOVE:
-            if (data.ordered) {
-                dispatch({ type: PUZZLE_STATES.DONE, complexity: data.complexity })
+            if (state.ordered) {
+                dispatch({ type: PUZZLE_STATES.DONE, complexity: game.complexity })
                 if (state.challenges === 2) {
                     dispatch({ type: PUZZLE_STATES.END_GAME })
                 }
             }
+            break
+        case PUZZLE_STATES.END_GAME:
+            console.log('END_GAME')
             break
         }
     }, [state, dispatch])
@@ -184,8 +190,13 @@ export const Puzzle = () => {
                                             <Draggable key={item.id} draggableId={item.id} index={index}>
                                                 {(draggableProvided, draggableSnapshot) => (
                                                     <Fade
-                                                        key={item} timeout={500 * index}
+                                                        key={item} timeout={fade ? 500 * index : 1000}
                                                         in={fade}
+                                                        onExited={() => {
+                                                            if (!fade) {
+                                                                dispatch({ type: PUZZLE_STATES.LOADING, timerValue: game.timerValue })
+                                                            }
+                                                        }}
                                                     >
                                                         <div
                                                             ref={draggableProvided.innerRef}

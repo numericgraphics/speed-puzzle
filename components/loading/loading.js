@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Box, Typography, useTheme } from '@mui/material'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
-import { millisecondToMinutes } from '../../utils'
+import { millisecondToSecond } from '../../utils'
 import { useSpeedPuzzle } from '../../hooks'
 import { bounceIn, bounceOut } from '../../styles'
 
@@ -34,9 +34,10 @@ export const Loading = (props) => {
             </Typography>
             {state.timerValue &&
                 <Fragment>
-                    <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToMinutes(state.timerValue)}`}</Typography>
+                    <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToSecond(state.timerValue)}`}</Typography>
                     <Typography variant="h5">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
                     <Typography variant="h5">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
+                    <Typography variant="h5">{`Calcul 1 (moves > complexity): ${state.moves > state.complexity}`}</Typography>
                 </Fragment>
             }
         </Box>

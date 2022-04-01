@@ -15,7 +15,8 @@ export const InitialPuzzleState = {
     timerValue: undefined,
     moves: 0,
     complexity: undefined,
-    challenges: 0
+    challenges: 0,
+    ordered: false
 }
 
 export const PuzzleReducer = (state, action) => {
@@ -57,14 +58,16 @@ export const PuzzleReducer = (state, action) => {
         return {
             ...state,
             event: action.type,
-            moves: state.moves + 1
+            moves: state.moves + 1,
+            ordered: action.ordered
         }
     case PUZZLE_STATES.END_LOADING :
         return {
             ...state,
             event: action.type,
             moves: 0,
-            complexity: undefined
+            complexity: undefined,
+            ordered: false
         }
     }
 }
