@@ -24,10 +24,9 @@ export const Puzzle = () => {
     const [currentGame, setCurrentGame] = useState(gameInitialState)
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
-    // const workerRef = useRef()
     const theme = useTheme()
     const [postTimerMessages, updateTimerWorker, timerValue] = useTimerWorker()
-    const [score, addScore, lastScore] = useGameScore()
+    const [score, addScore, lastScore, resetScore] = useGameScore()
 
     const checkPuzzleOrder = (array) => {
         const test = array.map((item) => {
@@ -93,10 +92,19 @@ export const Puzzle = () => {
         return await recursiveRandomArray(getItems(4))
     }
 
+    const initGame = () => {
+        resetScore()
+        setCurrentGame(gameInitialState)
+    }
+
     const runStep = useCallback(() => {
         switch (state.event) {
+        case PUZZLE_STATES.RELOAD:
+            initGame()
+            dispatch({ type: PUZZLE_STATES.LOADING })
+            break
         case PUZZLE_STATES.INIT:
-            // dispatch({ type: PUZZLE_STATES.LOADING })
+            initGame()
             break
         case PUZZLE_STATES.LOADING:
             if (state.challenges < 2) {

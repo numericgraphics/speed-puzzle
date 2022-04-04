@@ -38,7 +38,7 @@ export const Loading = (props) => {
                     <Typography variant="h5">{`Duration : ${score.timerValue && millisecondToSecond(score.timerValue)}`}</Typography>
                     <Typography variant="h5">{`Moves : ${score.moves > 0 && score.moves}`}</Typography>
                     <Typography variant="h5">{`Complexity : ${score.complexity && score.complexity}`}</Typography>
-                    <Typography variant="h5">{`Calcul 1 (moves > complexity): ${score.complexity / score.moves}`}</Typography>
+                    <Typography variant="h5">{`Calcul 1 (moves > complexity): ${Math.round(score.timerValue * (score.complexity / score.moves))}`}</Typography>
                 </Fragment>
             }
         </Box>

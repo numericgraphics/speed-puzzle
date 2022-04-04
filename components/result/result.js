@@ -24,7 +24,7 @@ export const Result = (props) => {
         <Box
             sx={[custom.box, { animation: open ? `${bounceIn} 1s forwards` : `${bounceOut} 0.5s forwards` }]}
             onAnimationEnd={() => {
-                !open && dispatch({ type: PUZZLE_STATES.LOADING })
+                !open && dispatch({ type: PUZZLE_STATES.RELOAD })
             }
             }
         >

@@ -14,7 +14,11 @@ function useGameScore () {
         return score[score.length - 1]
     }
 
-    return [score, addScore, lastScore]
+    const resetScore = () => {
+        setScore([])
+    }
+
+    return [score, addScore, lastScore, resetScore]
 }
 
 export { useGameScore }
