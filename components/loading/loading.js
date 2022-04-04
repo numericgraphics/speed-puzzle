@@ -6,11 +6,12 @@ import { useSpeedPuzzle } from '../../hooks'
 import { bounceIn, bounceOut } from '../../styles'
 
 export const Loading = (props) => {
+    const { score } = props
     const [open, setOpen] = useState(true)
     const theme = useTheme()
     const { custom } = theme
     const { reducer } = useSpeedPuzzle()
-    const { dispatch, state } = reducer
+    const { dispatch } = reducer
 
     useEffect(() => {
         setTimeout(() => {
@@ -30,14 +31,14 @@ export const Loading = (props) => {
                 variant="h1"
                 sx={{ mb: 4 }}
             >
-                {state.timerValue ? 'Bravo !' : 'Loading'}
+                {score ? 'Bravo !' : 'Loading'}
             </Typography>
-            {state.timerValue &&
+            {score &&
                 <Fragment>
-                    <Typography variant="h5">{`Duration : ${state.timerValue && millisecondToSecond(state.timerValue)}`}</Typography>
-                    <Typography variant="h5">{`Moves : ${state.moves > 0 && state.moves}`}</Typography>
-                    <Typography variant="h5">{`Complexity : ${state.complexity && state.complexity}`}</Typography>
-                    <Typography variant="h5">{`Calcul 1 (moves > complexity): ${state.moves > state.complexity}`}</Typography>
+                    <Typography variant="h5">{`Duration : ${score.timerValue && millisecondToSecond(score.timerValue)}`}</Typography>
+                    <Typography variant="h5">{`Moves : ${score.moves > 0 && score.moves}`}</Typography>
+                    <Typography variant="h5">{`Complexity : ${score.complexity && score.complexity}`}</Typography>
+                    <Typography variant="h5">{`Calcul 1 (moves > complexity): ${score.complexity / score.moves}`}</Typography>
                 </Fragment>
             }
         </Box>

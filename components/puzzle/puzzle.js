@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react'
+import React, { Fragment, useEffect, useState, useCallback } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { TransitionGroup } from 'react-transition-group'
 
 import { ImageSliceComponent } from './imageComponent'
 import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
-import { useFetch, useSpeedPuzzle } from '../../hooks'
+import { useFetch, useSpeedPuzzle, useTimerWorker, useGameScore } from '../../hooks'
 import { Loading } from '../loading'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { Fade, useTheme } from '@mui/material'
@@ -15,15 +15,19 @@ import { Init } from '../init'
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
 // patch package solution : https://callstack.com/blog/say-goodbye-to-old-fashioned-forks-thanks-to-the-patch-package/
 
+const gameInitialState = ({ complexity: undefined, timerValue: 0, moves: 0 })
+
 export const Puzzle = () => {
     const { reducer } = useSpeedPuzzle()
     const { state, dispatch } = reducer
     const [data, setData] = useState({ items: [], url: '' })
-    const [game, setGame] = useState({ complexity: undefined, timerValue: 0 })
+    const [currentGame, setCurrentGame] = useState(gameInitialState)
     const [fade, setFade] = useState(false)
     const [response, loading] = useFetch(data.url)
-    const workerRef = useRef()
+    // const workerRef = useRef()
     const theme = useTheme()
+    const [postTimerMessages, updateTimerWorker, timerValue] = useTimerWorker()
+    const [score, addScore, lastScore] = useGameScore()
 
     const checkPuzzleOrder = (array) => {
         const test = array.map((item) => {
@@ -85,57 +89,37 @@ export const Puzzle = () => {
         return randomArray
     }
 
-    const updateWorker = () => {
-        if (typeof (Worker) !== 'undefined') {
-            workerRef.current = new Worker(new URL('../../workers/worker.js', import.meta.url))
-            workerRef.current.onmessage = (event) => {
-                if (event.data.event === COUNTER_MESSAGES.END) {
-                    setGame({
-                        ...game,
-                        timerValue: event.data.timerValue
-                    })
-                    workerRef.current.terminate()
-                }
-            }
-        } else {
-            console.log('TIMER WORKER ISSUE - browser doesnt support')
-        }
-    }
-
-    const postTimerMessages = (event) => {
-        workerRef.current.postMessage({ event })
-    }
-
     const getPuzzleSource = async () => {
         return await recursiveRandomArray(getItems(4))
     }
 
-    useEffect(() => {
+    const runStep = useCallback(() => {
         switch (state.event) {
         case PUZZLE_STATES.INIT:
             // dispatch({ type: PUZZLE_STATES.LOADING })
             break
         case PUZZLE_STATES.LOADING:
-            getPuzzleSource()
-                .then((items) => {
-                    // by setting the state's url we trigger the useFetch(data.url)
-                    setData({
-                        url: `https://source.unsplash.com/600x600/?beach?sig={'${getRandomNumber()}`,
-                        items
+            if (state.challenges < 2) {
+                getPuzzleSource()
+                    .then((items) => {
+                        // by setting the state's url we trigger the useFetch(data.url)
+                        setData({
+                            url: `https://source.unsplash.com/600x600/?beach?sig={'${getRandomNumber()}`,
+                            items
+                        })
                     })
-                    setGame({
-                        ...game,
-                        complexity: checkPuzzleComplexity(items),
-                        timerValue: 0
-                    })
-                })
-                .catch((e) => console.log('getPuzzleSource - ERROR ', e))
+                    .catch((e) => console.log('getPuzzleSource - ERROR ', e))
+            }
             break
         case PUZZLE_STATES.READY:
+            setCurrentGame({
+                ...gameInitialState,
+                complexity: checkPuzzleComplexity(data.items)
+            })
             // fade out animation
             setFade(true)
             // create new timer worker
-            updateWorker()
+            updateTimerWorker()
             // init timer
             postTimerMessages(COUNTER_MESSAGES.START)
             break
@@ -146,25 +130,44 @@ export const Puzzle = () => {
             postTimerMessages(COUNTER_MESSAGES.END)
             break
         case PUZZLE_STATES.END_LOADING:
-            if (!loading) {
-                dispatch({ type: PUZZLE_STATES.READY, imageUrl: response.url })
+            if (state.challenges === 2) {
+                dispatch({ type: PUZZLE_STATES.END_GAME })
             } else {
-                dispatch({ type: PUZZLE_STATES.LOADING })
+                if (!loading) {
+                    dispatch({ type: PUZZLE_STATES.READY })
+                } else {
+                    dispatch({ type: PUZZLE_STATES.LOADING })
+                }
             }
             break
         case PUZZLE_STATES.MOVE:
+            setCurrentGame({
+                ...currentGame,
+                moves: currentGame.moves + 1
+            })
             if (state.ordered) {
-                dispatch({ type: PUZZLE_STATES.DONE, complexity: game.complexity })
-                if (state.challenges === 2) {
-                    dispatch({ type: PUZZLE_STATES.END_GAME })
-                }
+                dispatch({ type: PUZZLE_STATES.DONE })
             }
             break
         case PUZZLE_STATES.END_GAME:
             console.log('END_GAME')
             break
         }
-    }, [state, dispatch])
+    }, [state])
+
+    useEffect(() => {
+        runStep()
+    }, [state])
+
+    useEffect(() => {
+        if (timerValue !== 0) {
+            addScore({
+                moves: currentGame.moves,
+                complexity: currentGame.complexity,
+                timerValue
+            })
+        }
+    }, [timerValue])
 
     return (
         <Fragment>
@@ -174,9 +177,9 @@ export const Puzzle = () => {
                 case PUZZLE_STATES.INIT:
                     return <Init/>
                 case PUZZLE_STATES.LOADING:
-                    return <Loading/>
+                    return <Loading score={lastScore()} />
                 case PUZZLE_STATES.END_GAME:
-                    return <Result/>
+                    return <Result score={score} />
                 default:
                     return <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
@@ -194,7 +197,7 @@ export const Puzzle = () => {
                                                         in={fade}
                                                         onExited={() => {
                                                             if (!fade) {
-                                                                dispatch({ type: PUZZLE_STATES.LOADING, timerValue: game.timerValue })
+                                                                dispatch({ type: PUZZLE_STATES.LOADING })
                                                             }
                                                         }}
                                                     >
@@ -207,7 +210,7 @@ export const Puzzle = () => {
                                                                 draggableProvided.draggableProps.style
                                                             )}
                                                         >
-                                                            <ImageSliceComponent index={item.index} theme={theme} state={state} />
+                                                            <ImageSliceComponent index={item.index} theme={theme} url={response.url} />
                                                         </div>
                                                     </Fade>
 
