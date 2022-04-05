@@ -10,6 +10,9 @@ import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
 import { Fade, useTheme } from '@mui/material'
 import { Result } from '../result'
 import { Init } from '../init'
+import { useCountDown } from '../../hooks/useCountDown'
+import { GAME_CONFIG } from '../../config'
+import { CircularProgressWithLabel } from '../progress'
 
 // to prevent long press event in mobile devices
 // https://github.com/atlassian/react-beautiful-dnd/issues/415#issuecomment-683401424
@@ -27,6 +30,7 @@ export const Puzzle = () => {
     const theme = useTheme()
     const [postTimerMessages, updateTimerWorker, timerValue] = useTimerWorker()
     const [score, addScore, lastScore, resetScore] = useGameScore()
+    const [progress, timeLeft, starCountDown, killCountDown] = useCountDown(GAME_CONFIG.QUESTION_DURATION)
 
     const checkPuzzleOrder = (array) => {
         const test = array.map((item) => {
@@ -130,12 +134,16 @@ export const Puzzle = () => {
             updateTimerWorker()
             // init timer
             postTimerMessages(COUNTER_MESSAGES.START)
+            // init countDown
+            starCountDown()
             break
         case PUZZLE_STATES.DONE:
             // fade in animation
             setFade(false)
             // kill timer worker
             postTimerMessages(COUNTER_MESSAGES.END)
+            // kill countDown
+            killCountDown()
             break
         case PUZZLE_STATES.END_LOADING:
             if (state.challenges === 2) {
@@ -177,6 +185,13 @@ export const Puzzle = () => {
         }
     }, [timerValue])
 
+    useEffect(() => {
+        console.log('timeLeft', timeLeft)
+        if (timeLeft === 0) {
+            dispatch({ type: PUZZLE_STATES.DONE })
+        }
+    }, [timeLeft])
+
     return (
         <Fragment>
 
@@ -189,49 +204,52 @@ export const Puzzle = () => {
                 case PUZZLE_STATES.END_GAME:
                     return <Result score={score} />
                 default:
-                    return <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="droppable">
-                            {(droppableProvided, droppableSnapshot) => (
-                                <div
-                                    ref={droppableProvided.innerRef}
-                                >
-                                    <TransitionGroup>
-                                        {data.items.map((item, index) => (
+                    return <Fragment>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="droppable">
+                                {(droppableProvided, droppableSnapshot) => (
+                                    <div
+                                        ref={droppableProvided.innerRef}
+                                    >
+                                        <TransitionGroup>
+                                            {data.items.map((item, index) => (
 
-                                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                {(draggableProvided, draggableSnapshot) => (
-                                                    <Fade
-                                                        key={item} timeout={fade ? 500 * index : 1000}
-                                                        in={fade}
-                                                        onExited={() => {
-                                                            if (!fade) {
-                                                                dispatch({ type: PUZZLE_STATES.LOADING })
-                                                            }
-                                                        }}
-                                                    >
-                                                        <div
-                                                            ref={draggableProvided.innerRef}
-                                                            {...draggableProvided.draggableProps}
-                                                            {...draggableProvided.dragHandleProps}
-                                                            style={getItemStyle(
-                                                                draggableSnapshot.isDragging,
-                                                                draggableProvided.draggableProps.style
-                                                            )}
+                                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                    {(draggableProvided, draggableSnapshot) => (
+                                                        <Fade
+                                                            key={item} timeout={fade ? 500 * index : 1000}
+                                                            in={fade}
+                                                            onExited={() => {
+                                                                if (!fade) {
+                                                                    dispatch({ type: PUZZLE_STATES.LOADING })
+                                                                }
+                                                            }}
                                                         >
-                                                            <ImageSliceComponent index={item.index} theme={theme} url={response.url} />
-                                                        </div>
-                                                    </Fade>
+                                                            <div
+                                                                ref={draggableProvided.innerRef}
+                                                                {...draggableProvided.draggableProps}
+                                                                {...draggableProvided.dragHandleProps}
+                                                                style={getItemStyle(
+                                                                    draggableSnapshot.isDragging,
+                                                                    draggableProvided.draggableProps.style
+                                                                )}
+                                                            >
+                                                                <ImageSliceComponent index={item.index} theme={theme} url={response.url} />
+                                                            </div>
+                                                        </Fade>
 
-                                                )}
-                                            </Draggable>
+                                                    )}
+                                                </Draggable>
 
-                                        ))}
-                                    </TransitionGroup>
-                                    {droppableProvided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
+                                            ))}
+                                        </TransitionGroup>
+                                        {droppableProvided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        <CircularProgressWithLabel value={progress} timeLeft={timeLeft} />
+                    </Fragment>
                 }
             })()}
 

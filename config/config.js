@@ -1,0 +1,4 @@
+export const GAME_CONFIG = {
+    QUESTION_DURATION: 30,
+    NUMBER_OFF_QUESTION: 10
+}
