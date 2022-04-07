@@ -206,7 +206,8 @@ export const Puzzle = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 alignContent: 'center',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                gap: 4
             }}
         >
             {(() => {
@@ -222,9 +223,9 @@ export const Puzzle = () => {
                         <Box sx={{
                             display: 'flex',
                             alignSelf: 'center',
-                            flexGrow: 3,
+                            flexGrow: 1,
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'flex-end'
                         }}
                         >
                             <DragDropContext onDragEnd={onDragEnd}>
