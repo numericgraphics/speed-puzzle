@@ -7,7 +7,12 @@ export const CircularProgressWithLabel = (
 ) => {
     return (
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress variant="determinate" value={value} thickness={22}/>
+            <CircularProgress variant="determinate" value={100} thickness={22} />
+            <CircularProgress variant="determinate" value={value} thickness={22} sx={{
+                position: 'absolute'
+            }}
+            color="error"
+            />
             <Box
                 sx={{
                     top: 0,

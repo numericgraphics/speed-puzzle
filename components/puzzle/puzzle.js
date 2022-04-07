@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { TransitionGroup } from 'react-transition-group'
+import { Box, Fade, Typography, useTheme } from '@mui/material'
 
 import { ImageSliceComponent } from './imageComponent'
 import { ArrayExtended, COUNTER_MESSAGES } from '../../utils'
 import { useFetch, useSpeedPuzzle, useTimerWorker, useGameScore } from '../../hooks'
 import { Loading } from '../loading'
 import { PUZZLE_STATES } from '../../reducers/puzzleReducer'
-import { Fade, useTheme } from '@mui/material'
 import { Result } from '../result'
 import { Init } from '../init'
 import { useCountDown } from '../../hooks/useCountDown'
@@ -111,7 +111,8 @@ export const Puzzle = () => {
             initGame()
             break
         case PUZZLE_STATES.LOADING:
-            if (state.challenges < 2) {
+            // TODO : "+ 1" because state.challenge is increase on loading
+            if (state.challenges < GAME_CONFIG.NUMBER_OF_QUESTION + 1) {
                 getPuzzleSource()
                     .then((items) => {
                         // by setting the state's url we trigger the useFetch(data.url)
@@ -146,7 +147,8 @@ export const Puzzle = () => {
             killCountDown()
             break
         case PUZZLE_STATES.END_LOADING:
-            if (state.challenges === 2) {
+            // TODO : "+ 1" because state.challenge is increase on loading
+            if (state.challenges === GAME_CONFIG.NUMBER_OF_QUESTION + 1) {
                 dispatch({ type: PUZZLE_STATES.END_GAME })
             } else {
                 if (!loading) {
@@ -193,8 +195,21 @@ export const Puzzle = () => {
     }, [timeLeft])
 
     return (
-        <Fragment>
-
+        <Box
+            sx={{
+                pt: 3,
+                pl: 5,
+                pr: 5,
+                pb: 3,
+                height: '100vh',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignContent: 'center',
+                flexDirection: 'column'
+            }}
+        >
             {(() => {
                 switch (state?.event) {
                 case PUZZLE_STATES.INIT:
@@ -204,55 +219,78 @@ export const Puzzle = () => {
                 case PUZZLE_STATES.END_GAME:
                     return <Result score={score} />
                 default:
-                    return <Fragment>
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            <Droppable droppableId="droppable">
-                                {(droppableProvided, droppableSnapshot) => (
-                                    <div
-                                        ref={droppableProvided.innerRef}
-                                    >
-                                        <TransitionGroup>
-                                            {data.items.map((item, index) => (
+                    return <>
+                        <Box sx={{
+                            display: 'flex',
+                            alignSelf: 'center',
+                            flexGrow: 3,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        >
+                            <DragDropContext onDragEnd={onDragEnd}>
+                                <Droppable droppableId="droppable">
+                                    {(droppableProvided, droppableSnapshot) => (
+                                        <div
+                                            ref={droppableProvided.innerRef}
+                                        >
+                                            <TransitionGroup>
+                                                {data.items.map((item, index) => (
 
-                                                <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                    {(draggableProvided, draggableSnapshot) => (
-                                                        <Fade
-                                                            key={item} timeout={fade ? 500 * index : 1000}
-                                                            in={fade}
-                                                            onExited={() => {
-                                                                if (!fade) {
-                                                                    dispatch({ type: PUZZLE_STATES.LOADING })
-                                                                }
-                                                            }}
-                                                        >
-                                                            <div
-                                                                ref={draggableProvided.innerRef}
-                                                                {...draggableProvided.draggableProps}
-                                                                {...draggableProvided.dragHandleProps}
-                                                                style={getItemStyle(
-                                                                    draggableSnapshot.isDragging,
-                                                                    draggableProvided.draggableProps.style
-                                                                )}
+                                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                        {(draggableProvided, draggableSnapshot) => (
+                                                            <Fade
+                                                                key={item} timeout={fade ? 500 * index : 1000}
+                                                                in={fade}
+                                                                onExited={() => {
+                                                                    if (!fade) {
+                                                                        dispatch({ type: PUZZLE_STATES.LOADING })
+                                                                    }
+                                                                }}
                                                             >
-                                                                <ImageSliceComponent index={item.index} theme={theme} url={response.url} />
-                                                            </div>
-                                                        </Fade>
+                                                                <div
+                                                                    ref={draggableProvided.innerRef}
+                                                                    {...draggableProvided.draggableProps}
+                                                                    {...draggableProvided.dragHandleProps}
+                                                                    style={getItemStyle(
+                                                                        draggableSnapshot.isDragging,
+                                                                        draggableProvided.draggableProps.style
+                                                                    )}
+                                                                >
+                                                                    <ImageSliceComponent index={item.index} theme={theme} url={response.url} />
+                                                                </div>
+                                                            </Fade>
 
-                                                    )}
-                                                </Draggable>
+                                                        )}
+                                                    </Draggable>
 
-                                            ))}
-                                        </TransitionGroup>
-                                        {droppableProvided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        </DragDropContext>
-                        <CircularProgressWithLabel value={progress} timeLeft={timeLeft} />
-                    </Fragment>
+                                                ))}
+                                            </TransitionGroup>
+                                            {droppableProvided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
+                        </Box>
+                        <Box sx={{
+                            display: 'flex',
+                            alignSelf: 'flex-start',
+                            flexGrow: 1,
+                            gap: 3,
+                            justifyContent: 'flex-start',
+                            alignContent: 'center',
+                            alignItems: 'flex-start'
+                        }}
+                        >
+                            <CircularProgressWithLabel value={progress} timeLeft={timeLeft} />
+                            <Typography variant="h1" component="h1" >
+                                {state.challenges} / {GAME_CONFIG.NUMBER_OF_QUESTION}
+                            </Typography>
+                        </Box>
+                    </>
                 }
             })()}
+        </Box>
 
-        </Fragment>
     )
 }

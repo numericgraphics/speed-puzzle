@@ -39,8 +39,7 @@ export const PuzzleReducer = (state, action) => {
     case PUZZLE_STATES.DONE :
         return {
             ...state,
-            event: action.type,
-            challenges: state.challenges + 1
+            event: action.type
         }
     case PUZZLE_STATES.READY :
         return {
@@ -50,7 +49,8 @@ export const PuzzleReducer = (state, action) => {
     case PUZZLE_STATES.LOADING :
         return {
             ...state,
-            event: action.type
+            event: action.type,
+            challenges: state.challenges + 1
         }
     case PUZZLE_STATES.MOVE :
         return {
