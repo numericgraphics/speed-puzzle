@@ -4,7 +4,7 @@ class GameInstance {
         this.game = []
     }
 
-    addScore (value) {
+    setScore (value) {
         this.game = [...this.game, value]
     }
 

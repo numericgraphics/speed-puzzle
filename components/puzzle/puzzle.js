@@ -188,7 +188,6 @@ export const Puzzle = () => {
     }, [timerValue])
 
     useEffect(() => {
-        console.log('timeLeft', timeLeft)
         if (timeLeft === 0) {
             dispatch({ type: PUZZLE_STATES.DONE })
         }

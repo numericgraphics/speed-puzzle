@@ -3,32 +3,31 @@ import { GAME_CONFIG } from '../config'
 import { millisecondToSecond } from '../utils'
 
 function useGameScore () {
-    const [score, setScore] = useState([])
+    const [scores, setScores] = useState([])
 
     const addScore = (newScore) => {
         const { moves, complexity, timerValue } = newScore
         const movesCalculation = complexity / moves
         newScore.computedScore = timerValue > 30000 ? 0 : GAME_CONFIG.QUESTION_DURATION - (millisecondToSecond(timerValue) / movesCalculation)
-        setScore([
-            ...score,
+        setScores([
+            ...scores,
             newScore
         ])
     }
 
     const lastScore = () => {
-        return score[score.length - 1]
+        return scores[scores.length - 1]
     }
 
     const resetScore = () => {
-        setScore([])
+        setScores([])
     }
 
     const getGlobalScore = () => {
-        console.log('getGlobalScore', score)
-        return score.map(item => item.computedScore).reduce((prev, next) => prev + next)
+        return scores.map(item => item.computedScore).reduce((prev, next) => prev + next)
     }
 
-    return [score, addScore, lastScore, resetScore, getGlobalScore]
+    return [addScore, lastScore, resetScore, getGlobalScore]
 }
 
 export { useGameScore }
