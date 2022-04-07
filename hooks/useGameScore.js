@@ -8,7 +8,7 @@ function useGameScore () {
     const addScore = (newScore) => {
         const { moves, complexity, timerValue } = newScore
         const movesCalculation = complexity / moves
-        newScore.computedScore = timerValue > 30000 ? 0 : GAME_CONFIG.QUESTION_DURATION - (millisecondToSecond(timerValue) / movesCalculation)
+        newScore.computedScore = timerValue > 30000 ? 0 : GAME_CONFIG.GLOBAL_SCORE_BASE - (millisecondToSecond(timerValue) / movesCalculation)
         setScores([
             ...scores,
             newScore
