@@ -53,7 +53,8 @@ export const Loading = (props) => {
                 width: 100,
                 height: 500,
                 background: 'red',
-                animation: open ? `${spinColor} 0.5s forwards` : `${spinColorRevered} 0.5s forwards`
+                opacity: 0,
+                animation: open ? `${spinColor} 0.5s 1s forwards` : `${spinColorRevered} 0.5s forwards`
             }} />
         </>
     )

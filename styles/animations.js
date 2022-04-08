@@ -99,9 +99,11 @@ export const spinColor = keyframes`
   0%   {background: red;}
   100% {background: yellow;}
   from {
+    opacity: 0;
     transform:rotate(0deg) scale(0)
   }
   to {
+    opacity: 1;
     transform:rotate(-360deg) scale(5)
   }
 `
@@ -109,9 +111,11 @@ export const spinColorRevered = keyframes`
   0%   {background: yellow}
   100% {background: red}
   from {
+    opacity: 1;
     transform:rotate(-360deg) scale(5)
   }
   to {
+    opacity: 0;
     transform:rotate(0deg) scale(0)
   }
 `
