@@ -272,21 +272,26 @@ export const Puzzle = () => {
                                 </Droppable>
                             </DragDropContext>
                         </Box>
-                        <Box sx={{
-                            display: 'flex',
-                            alignSelf: 'flex-start',
-                            flexGrow: 1,
-                            gap: 3,
-                            justifyContent: 'flex-start',
-                            alignContent: 'center',
-                            alignItems: 'flex-start'
-                        }}
+                        <Fade
+                            in={fade}
+                            timeout={1000}
                         >
-                            <CircularProgressWithLabel value={progress} timeLeft={timeLeft} />
-                            <Typography variant="h1" component="h1" >
-                                {state.challenges} / {GAME_CONFIG.NUMBER_OF_QUESTION}
-                            </Typography>
-                        </Box>
+                            <Box sx={{
+                                display: 'flex',
+                                alignSelf: 'flex-start',
+                                flexGrow: 1,
+                                gap: 3,
+                                justifyContent: 'flex-start',
+                                alignContent: 'center',
+                                alignItems: 'flex-start'
+                            }}
+                            >
+                                <CircularProgressWithLabel value={progress} timeLeft={timeLeft} />
+                                <Typography variant="h1" component="h1" >
+                                    {state.challenges} / {GAME_CONFIG.NUMBER_OF_QUESTION}
+                                </Typography>
+                            </Box>
+                        </Fade>
                     </>
                 }
             })()}

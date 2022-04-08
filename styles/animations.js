@@ -1,5 +1,7 @@
 import { keyframes } from '@mui/material'
 
+// source : https://github.com/animate-css/animate.css/tree/main/source
+
 export const InDown = keyframes`
   from {
     transform: translate3d(0, -100%, 0);
@@ -71,5 +73,45 @@ export const bounceOut = keyframes`
   to {
     opacity: 0;
     transform: scale3d(0.3, 0.3, 0.3);
+  }
+`
+
+export const fadeInUp = keyframes`
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+`
+
+export const fadeOutDown = keyframes`
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+`
+export const spinColor = keyframes`
+  0%   {background: red;}
+  100% {background: yellow;}
+  from {
+    transform:rotate(0deg) scale(0)
+  }
+  to {
+    transform:rotate(-360deg) scale(5)
+  }
+`
+export const spinColorRevered = keyframes`
+  0%   {background: yellow}
+  100% {background: red}
+  from {
+    transform:rotate(-360deg) scale(5)
+  }
+  to {
+    transform:rotate(0deg) scale(0)
   }
 `
