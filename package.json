@@ -18,12 +18,14 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "latest",
     "@mui/material": "^5.5.1",
-    "next": "12.0.1",
+    "formik": "^2.2.9",
+    "next": "^12.1.5",
     "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "17.0.2",
     "react-transition-group": "^4.4.2",
-    "stylis": "^4.0.13"
+    "stylis": "^4.0.13",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "eslint": "7.32.0",

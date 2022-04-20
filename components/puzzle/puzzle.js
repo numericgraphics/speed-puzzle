@@ -29,7 +29,9 @@ export const Puzzle = () => {
     const [response, loading] = useFetch(data.url)
     const theme = useTheme()
     const [postTimerMessages, updateTimerWorker, timerValue] = useTimerWorker()
-    const [addScore, lastScore, resetScore, getGlobalScore] = useGameScore()
+    const [addScore, lastScore, resetScore] = useGameScore()
+    // WIP
+    // const [addScore, lastScore, resetScore, getGlobalScore] = useGameScore()
     const [progress, timeLeft, starCountDown, killCountDown] = useCountDown(GAME_CONFIG.QUESTION_DURATION)
 
     const checkPuzzleOrder = (array) => {
@@ -217,7 +219,8 @@ export const Puzzle = () => {
                 case PUZZLE_STATES.LOADING:
                     return <Loading score={lastScore()} />
                 case PUZZLE_STATES.END_GAME:
-                    return <Result score={getGlobalScore()} />
+                    // return <Result score={getGlobalScore()} />
+                    return <Result score={123} />
                 default:
                     return <>
                         <Box sx={{
