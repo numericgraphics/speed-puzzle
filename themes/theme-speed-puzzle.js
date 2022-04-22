@@ -406,82 +406,18 @@ export const theme = createTheme({
         },
         MuiTextField: {
             styleOverrides: {
-                /*
                 root: {
-                    // Some CSS
-                    label: {
-                        fontSize: '1.6rem',
-                        lineHeight: '0.5',
-                        padding: 3
+                    background: 'none',
+                    '& input': {
+                        color: 'red'
                     },
-                    input: {
-                        color: '#007fff'
-                    },
-                    fieldset: {
-                        borderWidth: '1px',
-                        borderColor: 'red',
-                        padding: '25px 5px',
-
-                        legend: {
-                            fontSize: '1.5rem'
-                        }
-
-                    },
-                    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-                        borderColor: 'blue'
-                    },
-                    // OutlinedInput: {
-                    //     backgroundColor: 'green',
-                    //     '&:hover': {
-                    //         borderColor: 'red'
-                    //
-                    //     },
-                    //     '&$focused': {
-                    //         borderColor: 'red'
-                    //     }
-                    // },
-
-                    '& label': {
-                        '& :hover': {
-                            backgroundColor: 'pink'
-                        },
-                        color: 'yellow'
-                    },
-                    '& label.Mui-focused': {
-                        color: 'yellow'
-                    },
-                    // focused color for input with variant='standard'
-                    '& .MuiInput-underline:after': {
-                        borderBottomColor: 'yellow'
-                    },
-                    // focused color for input with variant='filled'
-                    '& .MuiFilledInput-underline:after': {
-                        borderBottomColor: 'yellow'
-                    },
-                    // focused color for input with variant='outlined'
-                    '& .MuiOutlinedInput-root': {
-                        backgroundColor: 'green',
-                        '&.Mui-focused fieldset': {
-                            borderColor: 'yellow'
-                        },
-                        '& :hover': {
-                            backgroundColor: 'pink',
-                            // borderColor: 'yellow',
-                            // '& fieldset': {
-                            //     borderColor: 'yellow'
-                            // }
-                        }
-                    }
-                }
-*/
-                root: {
                     '& label': {
                         fontSize: '1.6rem',
                         lineHeight: '0.5',
                         padding: 3
                     },
                     '& label.Mui-focused': {
-                        color: 'white'
+                        background: 'none'
                     },
                     '& fieldset': {
                         borderWidth: '1px',
@@ -491,18 +427,13 @@ export const theme = createTheme({
                     '& legend': {
                         fontSize: '1.5rem'
                     },
-                    '& .MuiInput-underline:after': {
-                        borderBottomColor: 'yellow'
-                    },
                     '& .MuiOutlinedInput-root': {
+                        background: 'none',
                         '& fieldset': {
                             borderColor: '#007fff'
                         },
                         '&:hover fieldset': {
                             borderColor: '#007fff'
-                        },
-                        '&.Mui-focused fieldset': {
-                            borderColor: 'yellow'
                         }
                     }
                 }
