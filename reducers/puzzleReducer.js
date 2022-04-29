@@ -11,7 +11,7 @@ export const PUZZLE_STATES = Object.freeze({
 })
 
 export const InitialPuzzleState = {
-    event: PUZZLE_STATES.END_GAME,
+    event: PUZZLE_STATES.INIT,
     challenges: 0,
     ordered: false
 }

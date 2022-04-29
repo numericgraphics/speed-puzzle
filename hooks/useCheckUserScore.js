@@ -1,33 +1,31 @@
 import { useEffect, useState } from 'react'
 
-function useDb (newScore) {
+function useCheckUserScore (newScore) {
     const [scored, setScored] = useState({ value: undefined, content: undefined })
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const addScoreToDB = async (score) => {
+        const compareScoreInDB = async (score) => {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ score })
             }
-            const response = await fetch('/api/score', requestOptions)
+            const response = await fetch('/api/checkUserScore', requestOptions)
 
             if (response.status === 200) {
                 setScored({ value: true, content: {} })
             } else {
                 setScored({ value: false, content: {} })
             }
-            setLoading(false)
         }
         if (newScore) {
-            addScoreToDB(newScore)
-                .then(() => console.log('useDb done !'))
-                .catch((e) => console.log('useDb - ERROR ', e))
+            compareScoreInDB(newScore)
+                .then(() => console.log('useCheckUserScore done !'))
+                .catch((e) => console.log('useCheckUserScore - ERROR ', e))
         }
     }, [newScore])
 
-    return [loading, scored]
+    return [scored]
 }
 
-export { useDb }
+export { useCheckUserScore }

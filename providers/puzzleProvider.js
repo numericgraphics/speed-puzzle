@@ -5,7 +5,7 @@ import { Game } from '../services'
 export const PuzzleContext = createContext(undefined)
 
 export function PuzzleProvider ({ children }) {
-    const [state, dispatch] = useReducer(PuzzleReducer, InitialPuzzleState)
+    const [state, dispatch] = useReducer(PuzzleReducer, InitialPuzzleState, undefined)
     const reducer = { dispatch, state, PUZZLE_STATES }
     useEffect(() => { }, [])
 
